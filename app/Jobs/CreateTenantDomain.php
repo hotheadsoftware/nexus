@@ -16,12 +16,6 @@ class CreateTenantDomain implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-
-
-
-
-
-
     protected TenantWithDatabase $tenant;
 
     public function __construct(TenantWithDatabase $tenant)
