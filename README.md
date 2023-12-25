@@ -40,9 +40,12 @@ Docker Desktop (MacOS, Windows, Linux) or Docker Engine (Linux)
 
 1. Clone the repository
 2. Composer Install
+
    a. `composer install` if you have PHP & Composer installed locally, OR
+
    b. `docker run -v $(pwd):/app composer install` if you are using Docker
-    1. You might run into errors around missing certain php extensions, but can override those with flags provided by
+   
+       You might run into errors around missing certain php extensions, but can override those with flags provided by
        the error output.
 3. Copy .env.example to .env
 4. ./vendor/bin/sail up -d
