@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use OwenIt\Auditing\Auditable;
 use Rappasoft\LaravelAuthenticationLog\Traits\AuthenticationLoggable;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditable
 {
-    use AuthenticationLoggable, HasApiTokens, HasFactory, HasRoles, Notifiable;
+    use AuthenticationLoggable, HasApiTokens, HasFactory, HasRoles, Notifiable, Auditable;
 
     /**
      * The attributes that are mass assignable.
