@@ -13,6 +13,7 @@ of providing a scaffold for micro-Saas applications.
 - [x] Debugging: Laravel Telescope
 - [x] Queue Management: Laravel Horizon
 - [x] App Monitoring: Laravel Pulse
+- [x] Authentication Logs & Notifications
 - [ ] Model Tagging (spatie/laravel-tags)
 - [ ] User Roles & Permissions (spatie/laravel-permission)
 - [ ] Custom Artisan Helper Commands
