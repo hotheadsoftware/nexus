@@ -14,8 +14,9 @@ of providing a scaffold for micro-Saas applications.
 - [x] Queue Management: Laravel Horizon
 - [x] App Monitoring: Laravel Pulse
 - [x] Authentication Logs & Notifications
-- [ ] Model Tagging (spatie/laravel-tags)
-- [ ] User Roles & Permissions (spatie/laravel-permission)
+- [x] Model Change Audits (https://laravel-auditing.com)
+- [x] Model Tagging (spatie/laravel-tags)
+- [x] User Roles & Permissions (spatie/laravel-permission)
 - [ ] Custom Artisan Helper Commands
 - [ ] Stretch Goal -- IAC (Infrastructure as Code) with Terraform
     - [ ] S3 Buckets
