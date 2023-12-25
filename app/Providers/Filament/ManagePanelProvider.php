@@ -2,7 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Manage\Resources\TenantResource\Widgets\Manage\StatsOverview;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -19,11 +18,34 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 class ManagePanelProvider extends PanelProvider
 {
+
+    public function register(): void
+    {
+        parent::register();
+
+        $this->app->afterResolving(DatabaseTenancyBootstrapper::class, function () {
+            $tenant = tenant();
+            $this->app
+                ->get('filament')
+                ->getPanel('manage')
+                ->brandLogo($tenant?->logo ? asset(Storage::url("images/" . $tenant->id . "/" . $tenant->logo)) : "")
+                ->colors([
+                    'danger' => $tenant->colors['manage']['danger'] ?? Color::Red,
+                    'primary' => $tenant->colors['manage']['primary'] ?? Color::Stone,
+                    'info' => $tenant->colors['manage']['info'] ?? Color::Blue,
+                    'success' => $tenant->colors['manage']['success'] ?? Color::Green,
+                    'warning' => $tenant->colors['manage']['warning'] ?? Color::Orange,
+                    'gray' => $tenant->colors['manage']['gray'] ?? Color::Green,
+                ])->boot();
+        });
+    }
+
     public function panel(Panel $panel): Panel
     {
         return $panel
@@ -42,14 +64,6 @@ class ManagePanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-            ])
-            ->colors([
-                'danger'  => Color::Red,
-                'primary' => Color::Stone,
-                'info'    => Color::Blue,
-                'success' => Color::Green,
-                'warning' => Color::Orange,
-                'gray'    => Color::Emerald,
             ])
             ->brandLogo(tenant()?->logo ? asset(Storage::url("images/" . tenant()->id . "/" . tenant()->logo)) : "")
             ->discoverResources(in: app_path('Filament/Manage/Resources'), for: 'App\\Filament\\Manage\\Resources')
