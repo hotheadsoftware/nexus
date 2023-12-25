@@ -19,7 +19,7 @@ class PreventAccessFromTenantDomains
     /** @var callable */
     protected $central404;
 
-    public function __construct(callable $central404 = null)
+    public function __construct(?callable $central404 = null)
     {
         $this->central404 = $central404 ?? function () {
             abort(404);

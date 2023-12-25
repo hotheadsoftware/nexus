@@ -24,7 +24,6 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 class ManagePanelProvider extends PanelProvider
 {
-
     public function register(): void
     {
         parent::register();
@@ -34,7 +33,8 @@ class ManagePanelProvider extends PanelProvider
             $this->app
                 ->get('filament')
                 ->getPanel('manage')
-                ->brandLogo($tenant?->logo ? asset(Storage::url("images/" . $tenant->id . "/" . $tenant->logo)) : "")
+                // TODO - use an assets bucket + CDN for client assets, with CORS allowing all central/tenant domains.
+                ->brandLogo($tenant?->logo ? asset(Storage::url('images/'.$tenant->id.'/'.$tenant->logo)) : '')
                 ->colors([
                     'danger' => $tenant->colors['manage']['danger'] ?? Color::Red,
                     'primary' => $tenant->colors['manage']['primary'] ?? Color::Stone,
@@ -65,7 +65,7 @@ class ManagePanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-            ->brandLogo(tenant()?->logo ? asset(Storage::url("images/" . tenant()->id . "/" . tenant()->logo)) : "")
+            ->brandLogo(tenant()?->logo ? asset(Storage::url('images/'.tenant()->id.'/'.tenant()->logo)) : '')
             ->discoverResources(in: app_path('Filament/Manage/Resources'), for: 'App\\Filament\\Manage\\Resources')
             ->discoverPages(in: app_path('Filament/Manage/Pages'), for: 'App\\Filament\\Manage\\Pages')
             ->pages([

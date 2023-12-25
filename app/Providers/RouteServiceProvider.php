@@ -38,9 +38,9 @@ class RouteServiceProvider extends ServiceProvider
     {
         foreach ($this->centralDomains() as $domain) {
             Route::middleware('web')
-                 ->domain($domain)
-                 ->namespace($this->namespace)
-                 ->group(base_path('routes/web.php'));
+                ->domain($domain)
+                ->namespace($this->namespace)
+                ->group(base_path('routes/web.php'));
         }
     }
 
@@ -48,10 +48,10 @@ class RouteServiceProvider extends ServiceProvider
     {
         foreach ($this->centralDomains() as $domain) {
             Route::prefix('api')
-                 ->domain($domain)
-                 ->middleware('api')
-                 ->namespace($this->namespace)
-                 ->group(base_path('routes/api.php'));
+                ->domain($domain)
+                ->middleware('api')
+                ->namespace($this->namespace)
+                ->group(base_path('routes/api.php'));
         }
     }
 
