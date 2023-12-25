@@ -17,6 +17,7 @@
         "laravel/sail": "^1.26",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
+        "spatie/laravel-tags": "^4.5",
         "stancl/tenancy": "^3.7"
     },
     "require-dev": {
