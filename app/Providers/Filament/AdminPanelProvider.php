@@ -44,7 +44,9 @@ class AdminPanelProvider extends PanelProvider
                 StatsOverview::class,
             ])
             ->middleware([
-                PreventAccessFromTenantDomains::class,
+                // TODO this middleware is causing a weird issue: route 'login' not found on the first
+                // load of the login page after a tenant is created. It works fine after that.
+                // PreventAccessFromTenantDomains::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
@@ -54,7 +56,6 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-
             ])
             ->authMiddleware([
                 Authenticate::class,
