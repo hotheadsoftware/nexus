@@ -14,12 +14,20 @@ return [
     /**
      * The list of domains hosting your central app.
      *
-     * Only relevant if you're using the domain or subdomain identification middleware.
+     * We use domain-level tenancy initialization, so we have to know which
+     * domains are "central" context. For the values below, provide every
+     * domain that should be considered central, for every environment.
+     *
+     * Ex:
+     *
+     * - develop.nexus.cloud.inc
+     * - staging.nexus.cloud.inc
+     * - nexus.cloud.inc
+     *
      */
     'central_domains' => [
         '127.0.0.1',
         'localhost',
-        'tenancy.cloud.inc',
     ],
 
     /**
@@ -52,7 +60,7 @@ return [
          * Tenant database names are created like this:
          * prefix + tenant_id + suffix.
          */
-        'prefix' => 'tenant',
+        'prefix' => 'tenant_',
         'suffix' => '',
 
         /**
@@ -89,7 +97,7 @@ return [
      * You can clear cache selectively by specifying the tag.
      */
     'cache' => [
-        'tag_base' => 'tenant', // This tag_base, followed by the tenant_id, will form a tag that will be applied on each cache call.
+        'tag_base' => 'tenant_',
     ],
 
     /**
@@ -149,7 +157,7 @@ return [
      * either using the Redis facade or by injecting it as a dependency.
      */
     'redis' => [
-        'prefix_base' => 'tenant', // Each key in Redis will be prepended by this prefix_base, followed by the tenant id.
+        'prefix_base' => 'tenant_', // Each key in Redis will be prepended by this prefix_base, followed by the tenant id.
         'prefixed_connections' => [ // Redis connections whose keys are prefixed, to separate one tenant's keys from another.
             // 'default',
         ],
@@ -165,7 +173,7 @@ return [
      */
     'features' => [
         // Stancl\Tenancy\Features\UserImpersonation::class,
-        // Stancl\Tenancy\Features\TelescopeTags::class,
+        Stancl\Tenancy\Features\TelescopeTags::class,
         // Stancl\Tenancy\Features\UniversalRoutes::class,
         // Stancl\Tenancy\Features\TenantConfig::class, // https://tenancyforlaravel.com/docs/v3/features/tenant-config
         // Stancl\Tenancy\Features\CrossDomainRedirect::class, // https://tenancyforlaravel.com/docs/v3/features/cross-domain-redirect
@@ -185,7 +193,7 @@ return [
      * Parameters used by the tenants:migrate command.
      */
     'migration_parameters' => [
-        '--force' => true, // This needs to be true to run migrations in production.
+        '--force' => true,
         '--path' => [database_path('migrations/tenant')],
         '--realpath' => true,
     ],
@@ -194,7 +202,7 @@ return [
      * Parameters used by the tenants:seed command.
      */
     'seeder_parameters' => [
-        '--class' => 'DatabaseSeeder', // root seeder class
-        // '--force' => true,
+        '--class' => 'Database\Seeders\Tenant\DatabaseSeeder', // root seeder class
+        '--force' => true,
     ],
 ];
