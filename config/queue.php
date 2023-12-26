@@ -42,6 +42,22 @@ return [
             'retry_after' => 90,
             'after_commit' => false,
         ],
+        /**
+         * Allows us to dispatch jobs which are FORCED to use the central connection.
+         * If we had some logic that needs to update the central context, use this
+         * connection so we can be sure it's not running in a tenant context.
+         *
+         * dispatch(new SomeJob(...))->onConnection('central');
+         */
+        'central' => [
+            'connection' => 'central',
+            'driver' => 'database',
+            'table' => 'jobs',
+            'queue' => 'default',
+            'retry_after' => 90,
+            'after_commit' => false,
+            'central' => true,
+        ],
 
         'beanstalkd' => [
             'driver' => 'beanstalkd',
@@ -71,7 +87,6 @@ return [
             'block_for' => null,
             'after_commit' => false,
         ],
-
     ],
 
     /*
