@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Widgets\CompanyList;
 use App\Filament\Widgets\StatsOverview;
 use App\Http\Middleware\PreventAccessFromTenantDomains;
 use Filament\Http\Middleware\Authenticate;
@@ -39,6 +40,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
+                CompanyList::class,
                 StatsOverview::class,
             ])
             ->middleware([

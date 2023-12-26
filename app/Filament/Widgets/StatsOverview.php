@@ -10,7 +10,7 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 class StatsOverview extends BaseWidget
 {
     protected static ?string $pollingInterval = '30s';
-
+    protected static ?int $sort = 1;
     protected function getStats(): array
     {
         $user = Auth::user();
