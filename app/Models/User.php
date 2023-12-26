@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,9 +13,16 @@ use OwenIt\Auditing\Auditable;
 use Rappasoft\LaravelAuthenticationLog\Traits\AuthenticationLoggable;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditable
+class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditable, FilamentUser
 {
     use AuthenticationLoggable, HasApiTokens, HasFactory, HasRoles, Notifiable, Auditable;
+
+    // protected $connection = 'pgsql';
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return true;
+    }
 
     /**
      * The attributes that are mass assignable.
