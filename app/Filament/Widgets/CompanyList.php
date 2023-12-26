@@ -29,7 +29,7 @@ class CompanyList extends BaseWidget
             )
             ->columns([
                 Tables\Columns\TextColumn::make('name')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('domains')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('domains.domain')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('created_at')->searchable()->sortable(),
             ]);
     }

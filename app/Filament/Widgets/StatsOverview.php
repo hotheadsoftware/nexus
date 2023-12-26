@@ -14,7 +14,8 @@ class StatsOverview extends BaseWidget
     protected function getStats(): array
     {
         $user = Auth::user();
-        $tenants = Tenant::with('domains')->where('user_id', $user->id)->get();
+
+        $tenants = Tenant::where('user_id', $user->id)->with('domains')->get();
 
         return [
             Stat::make('Companies', $tenants->count())

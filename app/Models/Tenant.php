@@ -13,6 +13,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
 {
     use HasDatabase, HasDomains;
 
+
     /**
      * A brand is an entity to hold customizations to the panels in the tenant context.
      * This allows clients to specify logos, colors, and headlines for their businesses.
@@ -29,4 +30,13 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     {
         return $this->belongsTo(User::class);
     }
+
+    public static function getCustomColumns(): array
+    {
+        return [
+            'id' => 'id',
+            'user_id' => 'user_id',
+        ];
+    }
+
 }
