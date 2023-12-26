@@ -3,13 +3,19 @@
 declare(strict_types=1);
 
 use App\Models\Tenant;
-use Stancl\Tenancy\Database\Models\Domain;
+use App\Models\Domain;
 
 return [
     'tenant_model' => Tenant::class,
+    'domain_model' => Domain::class,
+
+    // If we get away from UUIDs for tenants, I could use the auditing package
+    // to track tenant events. Something for later consideration, prior to
+    // launch. Just have to update this and the related migrations.
+
     'id_generator' => Stancl\Tenancy\UUIDGenerator::class,
 
-    'domain_model' => Domain::class,
+
 
     /**
      * The list of domains hosting your central app.
