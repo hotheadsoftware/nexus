@@ -6,6 +6,7 @@ namespace App\Models;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -18,15 +19,6 @@ class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditab
 {
     use Auditable, AuthenticationLoggable, HasApiTokens, HasFactory, HasRoles, Notifiable;
 
-    // protected $connection = 'pgsql';
-
-    public function canAccessPanel(Panel $panel): bool
-    {
-        $tenant_context = in_array(InitializeTenancyByDomain::class, $panel->getMiddleware());
-        $tenant = tenant('id') !== null;
-
-        return ($tenant_context && $tenant) || (!$tenant_context && !$tenant);
-    }
 
     /**
      * The attributes that are mass assignable.
@@ -58,4 +50,19 @@ class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditab
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function tenants(): HasMany
+    {
+        return $this->hasMany(Tenant::class);
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        $tenant_context = in_array(InitializeTenancyByDomain::class, $panel->getMiddleware());
+        $tenant = tenant('id') !== null;
+
+        return ($tenant_context && $tenant) || (!$tenant_context && !$tenant);
+    }
+
+
 }
