@@ -55,6 +55,7 @@ class ManagePanelProvider extends PanelProvider
             ->id(self::PANEL)
             ->path(self::PANEL)
             ->login()
+            ->spa()
             ->registration()
             ->middleware([
                 PreventAccessFromCentralDomains::class,
