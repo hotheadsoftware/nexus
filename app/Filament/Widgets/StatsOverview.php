@@ -3,20 +3,23 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Tenant;
-use App\Models\User;
+use Auth;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class StatsOverview extends BaseWidget
 {
+    protected static ?string $pollingInterval = '30s';
+
     protected function getStats(): array
     {
-        $tenants = Tenant::all();
+        $user = Auth::user();
+        $tenants = Tenant::with('domains')->where('user_id', $user->id)->get();
 
         return [
-            Stat::make('Users', User::count()),
-            Stat::make('Tenants', $tenants->count()),
+            Stat::make('Active Instances', $tenants->count())->description('@ $2500/mo'),
             Stat::make('Domains', $tenants->sum(fn ($tenant) => $tenant->domains->count())),
+            Stat::make('Invoice', 2500)->description('Due 10/30/2023'),
         ];
     }
 }
