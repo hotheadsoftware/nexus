@@ -24,13 +24,14 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 class ManagePanelProvider extends PanelProvider
 {
+    public const PANEL = 'manage';
+
     public function register(): void
     {
         parent::register();
 
         $this->app->afterResolving(DatabaseTenancyBootstrapper::class, function () {
-            $tenant = tenant();
-            $brand = $tenant->brands->where('panel', 'manage')->first();
+            $brand = tenant()->brands->where('panel', self::PANEL)->first();
             if ($brand) {
                 $this->app
                     ->get('filament')
@@ -43,7 +44,7 @@ class ManagePanelProvider extends PanelProvider
                         'warning' => $brand->colors['manage']['warning'] ?? Color::Orange,
                         'gray' => $brand->colors['manage']['gray'] ?? Color::Green,
                     ])
-                    ->brandLogo($brand->logo ? asset(Storage::url('images/'.$tenant->id.'/'.$tenant->logo)) : '')
+                    ->brandLogo($brand->logo ? asset(Storage::url('images/'.$brand->tenant_id.'/'.$brand->logo)) : '')
                     ->boot();
             }
         });
@@ -52,8 +53,8 @@ class ManagePanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->id('manage')
-            ->path('manage')
+            ->id(self::PANEL)
+            ->path(self::PANEL)
             ->login()
             ->registration()
             ->middleware([
@@ -69,7 +70,14 @@ class ManagePanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-            ->brandLogo(tenant()?->logo ? asset(Storage::url('images/'.tenant()->id.'/'.tenant()->logo)) : '')
+            ->colors([
+                'danger' => Color::Red,
+                'primary' => Color::Stone,
+                'info' => Color::Blue,
+                'success' => Color::Green,
+                'warning' => Color::Orange,
+                'gray' => Color::Green,
+            ])
             ->discoverResources(in: app_path('Filament/Manage/Resources'), for: 'App\\Filament\\Manage\\Resources')
             ->discoverPages(in: app_path('Filament/Manage/Pages'), for: 'App\\Filament\\Manage\\Pages')
             ->pages([
@@ -77,8 +85,7 @@ class ManagePanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Manage/Widgets'), for: 'App\\Filament\\Manage\\Widgets')
             ->widgets([
-                //                Widgets\AccountWidget::class,
-                //                Widgets\FilamentInfoWidget::class,
+                // Add your home-page dashboard widgets here.
             ])
             ->authMiddleware([
                 Authenticate::class,
