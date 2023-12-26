@@ -17,9 +17,15 @@ class StatsOverview extends BaseWidget
         $tenants = Tenant::with('domains')->where('user_id', $user->id)->get();
 
         return [
-            Stat::make('Active Instances', $tenants->count())->description('@ $2500/mo'),
-            Stat::make('Domains', $tenants->sum(fn ($tenant) => $tenant->domains->count())),
-            Stat::make('Invoice', 2500)->description('Due 10/30/2023'),
+            Stat::make('Companies', $tenants->count())
+                ->description('Active Nexus Instances')
+                ->descriptionColor('primary'),
+            Stat::make('Domains', $tenants->sum(fn ($tenant) => $tenant->domains->count()))
+                ->description('Enabled Domains')
+                ->descriptionColor('primary'),
+            Stat::make('Next Invoice', "$2500")
+                ->description('Due December 31')
+                ->descriptionColor('danger'),
         ];
     }
 }
