@@ -19,7 +19,6 @@ class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditab
 {
     use Auditable, AuthenticationLoggable, HasApiTokens, HasFactory, HasRoles, Notifiable;
 
-
     /**
      * The attributes that are mass assignable.
      *
@@ -61,8 +60,6 @@ class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditab
         $tenant_context = in_array(InitializeTenancyByDomain::class, $panel->getMiddleware());
         $tenant = tenant('id') !== null;
 
-        return ($tenant_context && $tenant) || (!$tenant_context && !$tenant);
+        return ($tenant_context && $tenant) || (! $tenant_context && ! $tenant);
     }
-
-
 }

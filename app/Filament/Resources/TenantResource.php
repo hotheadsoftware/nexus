@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TenantResource\Pages;
-use App\Filament\Resources\TenantResource\RelationManagers;
 use App\Models\Tenant;
 use Exception;
 use Filament\Forms;
@@ -12,14 +11,16 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-
 class TenantResource extends Resource
 {
     protected static ?string $model = Tenant::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
     protected static ?int $navigationSort = 1;
+
     protected static ?string $label = 'Instance';
+
     protected static ?string $slug = 'instances';
 
     public static function form(Form $form): Form

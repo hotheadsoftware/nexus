@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Models\Tenant;
 use App\Models\Domain;
+use App\Models\Tenant;
 
 return [
     'tenant_model' => Tenant::class,
@@ -14,8 +14,6 @@ return [
     // launch. Just have to update this and the related migrations.
 
     'id_generator' => Stancl\Tenancy\UUIDGenerator::class,
-
-
 
     /**
      * The list of domains hosting your central app.

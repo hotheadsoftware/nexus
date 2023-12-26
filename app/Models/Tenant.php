@@ -13,7 +13,6 @@ class Tenant extends BaseTenant implements TenantWithDatabase
 {
     use HasDatabase, HasDomains;
 
-
     /**
      * A brand is an entity to hold customizations to the panels in the tenant context.
      * This allows clients to specify logos, colors, and headlines for their businesses.
@@ -42,5 +41,4 @@ class Tenant extends BaseTenant implements TenantWithDatabase
 
         ];
     }
-
 }

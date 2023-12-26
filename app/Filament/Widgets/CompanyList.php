@@ -18,8 +18,8 @@ class CompanyList extends BaseWidget
      * Widget Layout & Order
      */
     protected static ?int $sort = 3;
-    protected int | string | array $columnSpan = 2;
 
+    protected int|string|array $columnSpan = 2;
 
     public function table(Table $table): Table
     {
