@@ -28,6 +28,13 @@ class ManagePanelProvider extends PanelProvider
     {
         parent::register();
 
+        /**
+         * The goal here is re-boot the panel after tenancy has been initialized, so we can
+         * fetch customizations from the tenant. Right now, I'm relying on the 'data' property
+         * of the tenant, which automatically converts most model properties to JSON. I am
+         * considering a new relationship / model for panel settings, but this is a good start.
+         */
+
         $this->app->afterResolving(DatabaseTenancyBootstrapper::class, function () {
             $tenant = tenant();
             $this->app
