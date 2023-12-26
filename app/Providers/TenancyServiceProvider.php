@@ -124,7 +124,7 @@ class TenancyServiceProvider extends ServiceProvider
         $this->prepareLivewireForTenancy();
     }
 
-    protected function bootEvents()
+    protected function bootEvents(): void
     {
         foreach ($this->events() as $event => $listeners) {
             foreach ($listeners as $listener) {
@@ -137,7 +137,7 @@ class TenancyServiceProvider extends ServiceProvider
         }
     }
 
-    protected function mapRoutes()
+    protected function mapRoutes(): void
     {
         if (file_exists(base_path('routes/tenant.php'))) {
             Route::namespace(static::$controllerNamespace)
@@ -145,7 +145,7 @@ class TenancyServiceProvider extends ServiceProvider
         }
     }
 
-    protected function makeTenancyMiddlewareHighestPriority()
+    protected function makeTenancyMiddlewareHighestPriority(): void
     {
         $tenancyMiddleware = [
             // Even higher priority than the initialization middleware
@@ -166,6 +166,19 @@ class TenancyServiceProvider extends ServiceProvider
     private function prepareLivewireForTenancy(): void
     {
         if (! in_array(request()->getHttpHost(), config('tenancy.central_domains'))) {
+
+            // This initializer will throw an exception if the tenant cannot be identified.
+            // If we can't identify the tenant, it would be preferable to return a 404
+            // instead of returning a server error 500, which makes it look broken.
+
+            Middleware\InitializeTenancyByDomain::$onFail = function ($e) {
+                abort(404);
+            };
+
+            // We know we're in a tenant context (not on a central domain), so we have to
+            // to tell Livewire to call the InitializeTenancyByDomain middleware. This
+            // bootstraps all connections to use tenant resources instead of shared.
+
             Livewire::setUpdateRoute(function ($handle) {
                 return Route::post('/livewire/update', $handle)
                     ->middleware(
