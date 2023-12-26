@@ -8,6 +8,7 @@ use App\Jobs\CreateTenantDomain;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 use Stancl\JobPipeline\JobPipeline;
 use Stancl\Tenancy\Events;
 use Stancl\Tenancy\Jobs;
@@ -18,6 +19,7 @@ class TenancyServiceProvider extends ServiceProvider
 {
     // By default, no namespace is used to support the callable array syntax.
     public static string $controllerNamespace = '';
+    const TENANCY_IDENTIFICATION = Middleware\InitializeTenancyByDomain::class;
 
     public function events(): array
     {
@@ -104,6 +106,8 @@ class TenancyServiceProvider extends ServiceProvider
         $this->mapRoutes();
 
         $this->makeTenancyMiddlewareHighestPriority();
+        $this->modifyStaticConfigs();
+        $this->prepareLivewireForTenancy();
     }
 
     protected function bootEvents()
@@ -143,5 +147,26 @@ class TenancyServiceProvider extends ServiceProvider
         foreach (array_reverse($tenancyMiddleware) as $middleware) {
             $this->app[\Illuminate\Contracts\Http\Kernel::class]->prependToMiddlewarePriority($middleware);
         }
+    }
+
+    private function prepareLivewireForTenancy(): void
+    {
+        if(!in_array(request()->getHttpHost(), config('tenancy.central_domains') )) {
+            Livewire::setUpdateRoute(function ($handle) {
+                return Route::post('/livewire/update', $handle)
+                    ->middleware(
+                        [
+                            'web',
+                            static::TENANCY_IDENTIFICATION,
+                        ])->name('livewire.update');
+            });
+        }
+    }
+
+    private function modifyStaticConfigs(): void
+    {
+//        Middleware\InitializeTenancyByDomain::$onFail = function ($e) {
+//            return true;
+//        };
     }
 }
