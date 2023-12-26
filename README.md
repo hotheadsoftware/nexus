@@ -7,16 +7,16 @@ of providing a scaffold for micro-Saas applications.
 
 ## Feature List
 
-- [x] Domain-Based Multi-Database Multi-Tenancy (Every Tenant on its own Domain & Database)
-- [x] Filament v3 Control Plane (Central Context)
-- [x] Filament v3 Application Plane (Tenant Context)
-- [x] Debugging: Laravel Telescope
-- [x] Queue Management: Laravel Horizon
-- [x] App Monitoring: Laravel Pulse
-- [x] Authentication Logs & Notifications
-- [x] Model Change Audits (https://laravel-auditing.com)
-- [x] Model Tagging (spatie/laravel-tags)
-- [x] User Roles & Permissions (spatie/laravel-permission)
+- [x] [Domain-Based Multi-Database Multi-Tenancy](https://tenancyforlaravel.com/docs/v3/)
+- [x] [Filament v3](https://filamentphp.com/docs) Control Plane (Central Context)
+- [x] [Filament v3](https://filamentphp.com/docs) Application Plane (Tenant Context)
+- [x] [Laravel Telescope](https://laravel.com/docs/10.x/telescope)
+- [x] [Laravel Horizon](https://laravel.com/docs/10.x/horizon)
+- [x] [Laravel Pulse](https://pulse.laravel.com/)
+- [x] [Authentication Logs & Notifications](https://rappasoft.com/docs/laravel-authentication-log/v1/introduction)
+- [x] [Model Change Audits](https://laravel-auditing.com)
+- [x] [Model Tagging](https://spatie.be/docs/laravel-tags/v4/introduction)
+- [x] [User Roles & Permissions](https://spatie.be/docs/laravel-permission/v6/introduction)
 - [ ] Custom Artisan Helper Commands
 - [ ] Stretch Goal -- IAC (Infrastructure as Code) with Terraform
     - [ ] S3 Buckets
