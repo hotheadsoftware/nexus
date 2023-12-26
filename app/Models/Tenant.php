@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
@@ -17,11 +17,12 @@ class Tenant extends BaseTenant implements TenantWithDatabase
      * A brand is an entity to hold customizations to the panels in the tenant context.
      * This allows clients to specify logos, colors, and headlines for their businesses.
      *
-     * A tenant (optionally) owns one brand.
+     * A tenant (optionally) owns many brands - one per panel type. This allows custom
+     * color schemes for each panel type.
      */
-    public function brand(): HasOne
+    public function brands(): HasMany
     {
-        return $this->hasOne(Brand::class);
+        return $this->hasMany(Brand::class);
     }
 
     public function user(): BelongsTo

@@ -28,30 +28,26 @@ class ManagePanelProvider extends PanelProvider
     {
         parent::register();
 
-        /**
-         * The goal here is re-boot the panel after tenancy has been initialized, so we can
-         * fetch customizations from the tenant. Right now, I'm relying on the 'data' property
-         * of the tenant, which automatically converts most model properties to JSON. I am
-         * considering a new relationship / model for panel settings, but this is a good start.
-         */
-
         $this->app->afterResolving(DatabaseTenancyBootstrapper::class, function () {
             $tenant = tenant();
-            $this->app
-                ->get('filament')
-                ->getPanel('manage')
-                ->colors([
-                    'danger' => $tenant->colors['manage']['danger'] ?? Color::Red,
-                    'primary' => $tenant->colors['manage']['primary'] ?? Color::Stone,
-                    'info' => $tenant->colors['manage']['info'] ?? Color::Blue,
-                    'success' => $tenant->colors['manage']['success'] ?? Color::Green,
-                    'warning' => $tenant->colors['manage']['warning'] ?? Color::Orange,
-                    'gray' => $tenant->colors['manage']['gray'] ?? Color::Green,
-                ])
-                ->brandLogo(tenant()?->logo ? asset(Storage::url('images/'.tenant()->id.'/'.tenant()->logo)) : '')
-                ->boot();
+            $brand = $tenant->brands->where('panel', 'manage')->first();
+            if ($brand) {
+                $this->app
+                    ->get('filament')
+                    ->getPanel('manage')
+                    ->colors([
+                        'danger' => $brand->colors['manage']['danger'] ?? Color::Red,
+                        'primary' => $brand->colors['manage']['primary'] ?? Color::Stone,
+                        'info' => $brand->colors['manage']['info'] ?? Color::Blue,
+                        'success' => $brand->colors['manage']['success'] ?? Color::Green,
+                        'warning' => $brand->colors['manage']['warning'] ?? Color::Orange,
+                        'gray' => $brand->colors['manage']['gray'] ?? Color::Green,
+                    ])
+                    ->brandLogo($brand->logo ? asset(Storage::url('images/'.$tenant->id.'/'.$tenant->logo)) : '')
+                    ->boot();
+            }
         });
-}
+    }
 
     public function panel(Panel $panel): Panel
     {
@@ -81,8 +77,8 @@ class ManagePanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Manage/Widgets'), for: 'App\\Filament\\Manage\\Widgets')
             ->widgets([
-//                Widgets\AccountWidget::class,
-//                Widgets\FilamentInfoWidget::class,
+                //                Widgets\AccountWidget::class,
+                //                Widgets\FilamentInfoWidget::class,
             ])
             ->authMiddleware([
                 Authenticate::class,

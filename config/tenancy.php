@@ -23,7 +23,6 @@ return [
      * - develop.nexus.cloud.inc
      * - staging.nexus.cloud.inc
      * - nexus.cloud.inc
-     *
      */
     'central_domains' => [
         '127.0.0.1',

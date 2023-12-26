@@ -195,7 +195,7 @@ return [
             'name' => env('CONTROL_PLANE_USER_NAME', ''),
             'email' => env('CONTROL_PLANE_USER_EMAIL', ''),
             'password' => env('CONTROL_PLANE_USER_PASSWORD', ''),
-        ]
+        ],
     ],
 
     'app_plane' => [
@@ -203,6 +203,6 @@ return [
             'name' => env('APP_PLANE_USER_NAME', ''),
             'email' => env('APP_PLANE_USER_EMAIL', ''),
             'password' => env('APP_PLANE_USER_PASSWORD', ''),
-        ]
-    ]
+        ],
+    ],
 ];

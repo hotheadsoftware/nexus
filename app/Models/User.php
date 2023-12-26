@@ -15,7 +15,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditable, FilamentUser
 {
-    use AuthenticationLoggable, HasApiTokens, HasFactory, HasRoles, Notifiable, Auditable;
+    use Auditable, AuthenticationLoggable, HasApiTokens, HasFactory, HasRoles, Notifiable;
 
     // protected $connection = 'pgsql';
 

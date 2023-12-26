@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignUuid('tenant_id')->constrained();
             $table->string('name');
+            $table->string('panel');
             $table->string('logo')->nullable();
             $table->jsonb('colors')->nullable();
             $table->string('headline')->nullable();

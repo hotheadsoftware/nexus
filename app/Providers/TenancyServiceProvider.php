@@ -21,6 +21,7 @@ class TenancyServiceProvider extends ServiceProvider
 {
     // By default, no namespace is used to support the callable array syntax.
     public static string $controllerNamespace = '';
+
     const TENANCY_IDENTIFICATION = Middleware\InitializeTenancyByDomain::class;
 
     public function events(): array
@@ -84,7 +85,7 @@ class TenancyServiceProvider extends ServiceProvider
                 function (Events\TenancyEnded $event) {
                     $permissionRegistrar = app(PermissionRegistrar::class);
                     $permissionRegistrar->cacheKey = 'spatie.permission.cache';
-                }
+                },
             ],
 
             Events\BootstrappingTenancy::class => [],
@@ -92,8 +93,8 @@ class TenancyServiceProvider extends ServiceProvider
                 // Configure Spatie/Permission - Enable Tenant Context
                 function (Events\TenancyBootstrapped $event) {
                     $permissionRegistrar = app(PermissionRegistrar::class);
-                    $permissionRegistrar->cacheKey = 'spatie.permission.cache.tenant.' . $event->tenancy->tenant->getTenantKey();
-                }
+                    $permissionRegistrar->cacheKey = 'spatie.permission.cache.tenant.'.$event->tenancy->tenant->getTenantKey();
+                },
             ],
             Events\RevertingToCentralContext::class => [],
             Events\RevertedToCentralContext::class => [],
@@ -164,7 +165,7 @@ class TenancyServiceProvider extends ServiceProvider
 
     private function prepareLivewireForTenancy(): void
     {
-        if(!in_array(request()->getHttpHost(), config('tenancy.central_domains') )) {
+        if (! in_array(request()->getHttpHost(), config('tenancy.central_domains'))) {
             Livewire::setUpdateRoute(function ($handle) {
                 return Route::post('/livewire/update', $handle)
                     ->middleware(
@@ -178,8 +179,8 @@ class TenancyServiceProvider extends ServiceProvider
 
     private function modifyStaticConfigs(): void
     {
-//        Middleware\InitializeTenancyByDomain::$onFail = function ($e) {
-//            return true;
-//        };
+        //        Middleware\InitializeTenancyByDomain::$onFail = function ($e) {
+        //            return true;
+        //        };
     }
 }

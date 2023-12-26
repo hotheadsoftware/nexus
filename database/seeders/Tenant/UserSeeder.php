@@ -19,12 +19,11 @@ class UserSeeder extends Seeder
          * with each tenant in that environment. This allows us to login to each tenant and
          * create users, etc. as needed. We'll use impersonation in prod where needed.
          */
-
-        if(app()->environment() === 'local') {
+        if (app()->environment() === 'local') {
             User::create([
-                'name'              => config('app.app_plane.user.name'),
-                'email'             => config('app.app_plane.user.email'),
-                'password'          => Hash::make(config('app.app_plane.user.password')),
+                'name' => config('app.app_plane.user.name'),
+                'email' => config('app.app_plane.user.email'),
+                'password' => Hash::make(config('app.app_plane.user.password')),
                 'email_verified_at' => now(),
             ]);
         }
