@@ -12,6 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 use OwenIt\Auditing\Auditable;
 use Rappasoft\LaravelAuthenticationLog\Traits\AuthenticationLoggable;
 use Spatie\Permission\Traits\HasRoles;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 
 class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditable, FilamentUser
 {
@@ -21,7 +22,10 @@ class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditab
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return true;
+        $tenant_context = in_array(InitializeTenancyByDomain::class, $panel->getMiddleware());
+        $tenant = tenant('id') !== null;
+
+        return ($tenant_context && $tenant) || (!$tenant_context && !$tenant);
     }
 
     /**
