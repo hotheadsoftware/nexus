@@ -33,8 +33,6 @@ class ManagePanelProvider extends PanelProvider
             $this->app
                 ->get('filament')
                 ->getPanel('manage')
-                // TODO - use an assets bucket + CDN for client assets, with CORS allowing all central/tenant domains.
-                ->brandLogo($tenant?->logo ? asset(Storage::url('images/'.$tenant->id.'/'.$tenant->logo)) : '')
                 ->colors([
                     'danger' => $tenant->colors['manage']['danger'] ?? Color::Red,
                     'primary' => $tenant->colors['manage']['primary'] ?? Color::Stone,
@@ -42,9 +40,11 @@ class ManagePanelProvider extends PanelProvider
                     'success' => $tenant->colors['manage']['success'] ?? Color::Green,
                     'warning' => $tenant->colors['manage']['warning'] ?? Color::Orange,
                     'gray' => $tenant->colors['manage']['gray'] ?? Color::Green,
-                ])->boot();
+                ])
+                ->brandLogo(tenant()?->logo ? asset(Storage::url('images/'.tenant()->id.'/'.tenant()->logo)) : '')
+                ->boot();
         });
-    }
+}
 
     public function panel(Panel $panel): Panel
     {
@@ -52,6 +52,7 @@ class ManagePanelProvider extends PanelProvider
             ->id('manage')
             ->path('manage')
             ->login()
+            ->registration()
             ->middleware([
                 PreventAccessFromCentralDomains::class,
                 InitializeTenancyByDomain::class,
