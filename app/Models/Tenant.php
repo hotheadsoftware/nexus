@@ -35,7 +35,11 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     {
         return [
             'id' => 'id',
+            // Used for Display purposes, but also to generate the initial default domain.
+            'name' => 'name',
+            // All tenants must be owned by users.
             'user_id' => 'user_id',
+
         ];
     }
 
