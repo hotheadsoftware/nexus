@@ -7,11 +7,18 @@
         "framework"
     ],
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://spark.laravel.com"
+        }
+    ],
     "require": {
         "php": "^8.1",
         "filament/filament": "^3.1",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
+        "laravel/spark-paddle": "^5.0",
         "laravel/horizon": "^5.21",
         "laravel/pulse": "^1.0@beta",
         "laravel/sail": "^1.26",
