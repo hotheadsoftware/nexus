@@ -91,7 +91,7 @@ return [
     'billables' => [
 
         'user' => [
-            'model' => User::class,
+            'model' => \App\Models\Subscriber::class,
 
             'trial_days' => 5,
 
@@ -101,8 +101,8 @@ return [
                 [
                     'name' => 'Standard',
                     'short_description' => 'This is a short, human friendly description of the plan.',
-                    'monthly_id' => env('SPARK_STANDARD_MONTHLY_PLAN', 1000),
-                    'yearly_id' => env('SPARK_STANDARD_YEARLY_PLAN', 1001),
+                    'monthly_id' => env('SPARK_STANDARD_MONTHLY_PLAN', 'pri_01hjra21x2xdc2b4bjjb4eqgqp'),
+                    'yearly_id' => env('SPARK_STANDARD_YEARLY_PLAN', 'pri_01hjtt89dy7aad8vse5k31yxn1'),
                     'features' => [
                         'Feature 1',
                         'Feature 2',

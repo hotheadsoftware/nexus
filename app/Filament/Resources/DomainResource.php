@@ -27,7 +27,7 @@ class DomainResource extends Resource
      */
     public static function canViewAny(): bool
     {
-        return Auth::user()->tenants->count() > 0;
+        return Auth::user()?->tenants->count() > 0;
     }
 
     public static function form(Form $form): Form
@@ -35,24 +35,24 @@ class DomainResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('domain')
-                    ->autofocus()
-                    ->required()
-                    ->helperText('Enter the domain name (without the "http://" or "https://"). Example: "example.com"'),
+                                          ->autofocus()
+                                          ->required()
+                                          ->helperText('Enter the domain name (without the "http://" or "https://"). Example: "example.com"'),
 
                 Forms\Components\Select::make('tenant_id')->options(
                     Tenant::where('user_id', auth()->user()->id)
-                        ->get()
-                        ->pluck('name', 'id'))
-                    ->default(function () {
-                        return Tenant::where('user_id', auth()->user()->id)->first()->id ?? null;
-                    })->required()
-                    ->label('Instance Name')
-                    ->helperText('A domain can only point to one instance.'),
+                          ->get()
+                          ->pluck('name', 'id'))
+                                       ->default(function () {
+                                           return Tenant::where('user_id', auth()->user()->id)->first()->id ?? null;
+                                       })->required()
+                                       ->label('Instance Name')
+                                       ->helperText('A domain can only point to one instance.'),
 
                 Forms\Components\Checkbox::make('is_subdomain')
-                    ->label('Is this a subdomain?')
-                    ->default(true)
-                    ->helperText("If checked, we'll automatically add \".".Domain::getBaseDomain().'" to the end of the domain name.'),
+                                         ->label('Is this a subdomain?')
+                                         ->default(true)
+                                         ->helperText("If checked, we'll automatically add \".".Domain::getBaseDomain().'" to the end of the domain name.'),
             ])->disabled(function () {
                 return Tenant::where('user_id', auth()->user()->id)->count() == 0;
             });

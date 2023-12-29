@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -16,9 +14,14 @@ use Spark\Billable;
 use Spatie\Permission\Traits\HasRoles;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 
-class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditable, FilamentUser
+class Subscriber extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditable, FilamentUser
 {
-    use Auditable, AuthenticationLoggable, HasApiTokens, HasFactory, HasRoles, Notifiable, Billable;
+    use Auditable, AuthenticationLoggable, HasApiTokens, HasRoles, Notifiable, Billable;
+
+    protected $table = 'users';
+    protected $connection = 'central';
+
+    protected string $foreign_key = 'user_id';
 
     /**
      * The attributes that are mass assignable.
@@ -53,7 +56,7 @@ class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditab
 
     public function tenants(): HasMany
     {
-        return $this->hasMany(Tenant::class);
+        return $this->hasMany(Tenant::class, $this->foreign_key);
     }
 
     public function canAccessPanel(Panel $panel): bool
