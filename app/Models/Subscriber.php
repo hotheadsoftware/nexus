@@ -5,8 +5,14 @@ namespace App\Models;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Paddle\Cashier;
+use Laravel\Paddle\Customer;
+use Laravel\Paddle\Subscription;
+use Laravel\Paddle\Transaction;
 use Laravel\Sanctum\HasApiTokens;
 use OwenIt\Auditing\Auditable;
 use Rappasoft\LaravelAuthenticationLog\Traits\AuthenticationLoggable;
@@ -53,6 +59,24 @@ class Subscriber extends Authenticatable implements \OwenIt\Auditing\Contracts\A
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function subscriptions(): hasMany
+    {
+        return $this->hasMany(Subscription::class, 'billable_id')
+                    ->where('billable_type', Subscriber::class);
+    }
+
+    public function customer(): HasOne
+    {
+        return $this->hasOne(Customer::class, 'billable_id')->where('billable_type', Subscriber::class);
+    }
+
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class, 'billable_id')
+                    ->where('billable_type', Subscriber::class)
+                    ->orderByDesc('billed_at');
+    }
 
     public function tenants(): HasMany
     {
