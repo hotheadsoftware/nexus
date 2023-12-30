@@ -11,12 +11,19 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use OwenIt\Auditing\Auditable;
 use Rappasoft\LaravelAuthenticationLog\Traits\AuthenticationLoggable;
+use Spark\Billable;
 use Spatie\Permission\Traits\HasRoles;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 
 class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditable, FilamentUser
 {
-    use Auditable, AuthenticationLoggable, HasApiTokens, HasFactory, HasRoles, Notifiable;
+    use Auditable,
+        AuthenticationLoggable,
+        HasApiTokens,
+        HasFactory,
+        HasRoles,
+        Notifiable,
+        Billable;
 
     /**
      * The attributes that are mass assignable.

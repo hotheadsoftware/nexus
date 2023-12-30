@@ -91,7 +91,7 @@ return [
     'billables' => [
 
         'user' => [
-            'model' => \App\Models\Subscriber::class,
+            'model' => \App\Models\User::class,
 
             'trial_days' => 5,
 

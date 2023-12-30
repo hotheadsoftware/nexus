@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Subscriber;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 use Spark\Plan;
@@ -15,16 +15,16 @@ class SparkServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Spark::billable(Subscriber::class)->resolve(function (Request $request) {
+        Spark::billable(User::class)->resolve(function (Request $request) {
             return $request->user();
         });
 
-        Spark::billable(Subscriber::class)->authorize(function (Subscriber $billable, Request $request) {
+        Spark::billable(User::class)->authorize(function (User $billable, Request $request) {
             return $request->user() &&
                 $request->user()->id == $billable->id;
         });
 
-        Spark::billable(Subscriber::class)->checkPlanEligibility(function (Subscriber $billable, Plan $plan) {
+        Spark::billable(User::class)->checkPlanEligibility(function (User $billable, Plan $plan) {
             // if ($billable->projects > 5 && $plan->name == 'Basic') {
             //     throw ValidationException::withMessages([
             //         'plan' => 'You have too many projects for the selected plan.'
