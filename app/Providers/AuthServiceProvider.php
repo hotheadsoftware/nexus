@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use Auth;
 use Illuminate\Auth\SessionGuard;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
