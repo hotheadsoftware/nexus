@@ -2,7 +2,8 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use Auth;
+use Illuminate\Auth\SessionGuard;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -21,6 +22,12 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // This helps us maintain some separation between the concepts of User (central) and Operator (tenant).
+        // When we move into Phase 2 (Docker/K8S Stack), we will probably move away from this approach.
+        // The goal here is to get to a point where we can safely use User everywhere we need it.
+
+        SessionGuard::macro('operator', function () {
+            return SessionGuard::user();
+        });
     }
 }
