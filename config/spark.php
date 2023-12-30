@@ -89,30 +89,25 @@ return [
     */
 
     'billables' => [
-
         'user' => [
-            'model' => \App\Models\User::class,
-
-            'trial_days' => 5,
-
+            'model' => User::class,
+            'trial_days' => 14,
             'default_interval' => 'monthly',
-
             'plans' => [
+                // TODO - can we do this dynamically instead of putting it into Config?
                 [
-                    'name' => 'Standard',
-                    'short_description' => 'This is a short, human friendly description of the plan.',
-                    'monthly_id' => env('SPARK_STANDARD_MONTHLY_PLAN', 'pri_01hjra21x2xdc2b4bjjb4eqgqp'),
-                    'yearly_id' => env('SPARK_STANDARD_YEARLY_PLAN', 'pri_01hjtt89dy7aad8vse5k31yxn1'),
+                    'name' => 'Unlimited',
+                    'short_description' => 'Unlimited Platform Usage & All Features Available',
+                    'monthly_id' => env('PLAN_UNLIMITED_MONTHLY_ID', ''),
+                    'yearly_id' => env('PLAN_UNLIMITED_ANNUAL_ID', ''),
                     'features' => [
-                        'Feature 1',
-                        'Feature 2',
-                        'Feature 3',
+                        'Unlimited Platform Users & Usage',
+                        'Up to 5 Custom Domains',
+                        'All Features Available',
                     ],
                     'archived' => false,
                 ],
             ],
-
         ],
-
     ],
 ];
