@@ -15,6 +15,17 @@ of providing a scaffold for micro-Saas applications.
   - Only make domain changes in non-local environments.
   - Feature flag for this? 
 
+## Architecture
+
+### Phase One: MVP
+
+This app is a mono-repo, monolithic application. It contains two base panels: Admin (central)
+and Manage (tenant) panel (naming subject to revision). The central panel is used for initial
+sign-up, subscription management, and creation of tenant & domain environments. 
+
+The Manage panel is where users will spend most of their time, using the functionality provided
+by the application. They can invite users
+
 ## Feature List
 
 - [x] [Domain-Based Multi-Database Multi-Tenancy](https://tenancyforlaravel.com/docs/v3/)

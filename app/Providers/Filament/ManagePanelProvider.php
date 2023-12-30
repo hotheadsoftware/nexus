@@ -36,12 +36,12 @@ class ManagePanelProvider extends PanelProvider
                     ->get('filament')
                     ->getPanel('manage')
                     ->colors([
-                        'danger'  => $brand->colors['manage']['danger'] ?? Color::Red,
+                        'danger' => $brand->colors['manage']['danger'] ?? Color::Red,
                         'primary' => $brand->colors['manage']['primary'] ?? Color::Stone,
-                        'info'    => $brand->colors['manage']['info'] ?? Color::Blue,
+                        'info' => $brand->colors['manage']['info'] ?? Color::Blue,
                         'success' => $brand->colors['manage']['success'] ?? Color::Green,
                         'warning' => $brand->colors['manage']['warning'] ?? Color::Orange,
-                        'gray'    => $brand->colors['manage']['gray'] ?? Color::Green,
+                        'gray' => $brand->colors['manage']['gray'] ?? Color::Green,
                     ])
                     ->brandLogo($brand->logo ? asset(Storage::url('images/'.$brand->tenant_id.'/'.$brand->logo)) : '')
                     ->boot();
@@ -51,13 +51,17 @@ class ManagePanelProvider extends PanelProvider
 
     public function panel(Panel $panel): Panel
     {
+        // TODO let Users control registration from the Admin panel.
+        if (true) {
+            $panel->registration();
+        }
+
         return $panel
             ->id(self::PANEL)
             ->path(self::PANEL)
             ->login()
             ->spa()
             ->authGuard('operator')
-            ->registration()
             ->middleware([
                 PreventAccessFromCentralDomains::class,
                 InitializeTenancyByDomain::class,
@@ -72,12 +76,12 @@ class ManagePanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->colors([
-                'danger'  => Color::Red,
+                'danger' => Color::Red,
                 'primary' => Color::Stone,
-                'info'    => Color::Blue,
+                'info' => Color::Blue,
                 'success' => Color::Green,
                 'warning' => Color::Orange,
-                'gray'    => Color::Green,
+                'gray' => Color::Green,
             ])
             ->discoverResources(in: app_path('Filament/Manage/Resources'), for: 'App\\Filament\\Manage\\Resources')
             ->discoverPages(in: app_path('Filament/Manage/Pages'), for: 'App\\Filament\\Manage\\Pages')
