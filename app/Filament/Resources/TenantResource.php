@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class TenantResource extends Resource
 {
@@ -55,6 +56,11 @@ class TenantResource extends Resource
             ]);
     }
 
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where('user_id', auth()->user()?->id);
+    }
+
     public static function getRelations(): array
     {
         return [
@@ -65,9 +71,9 @@ class TenantResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListTenants::route('/'),
+            'index' => Pages\ListTenants::route('/'),
             'create' => Pages\CreateTenant::route('/create'),
-            'edit'   => Pages\EditTenant::route('/{record}/edit'),
+            'edit' => Pages\EditTenant::route('/{record}/edit'),
         ];
     }
 }
