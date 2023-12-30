@@ -5,6 +5,16 @@
 This is a Laravel 10+ project that incorporates numerous components with the aim
 of providing a scaffold for micro-Saas applications.
 
+## TODO
+
+- [ ] Laravel Audit class has UserResolver. 
+  - Extend this and modify for Subscriber. 
+  - Update config/audit.php.
+- [ ] AdminPanelProvider issue with PreventAccessFromTenantDomain (route Login not found issue)
+- [ ] Create a Route53 Helper. 
+  - Only make domain changes in non-local environments.
+  - Feature flag for this? 
+
 ## Feature List
 
 - [x] [Domain-Based Multi-Database Multi-Tenancy](https://tenancyforlaravel.com/docs/v3/)
