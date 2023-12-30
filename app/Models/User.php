@@ -19,11 +19,11 @@ class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditab
 {
     use Auditable,
         AuthenticationLoggable,
+        Billable,
         HasApiTokens,
         HasFactory,
         HasRoles,
-        Notifiable,
-        Billable;
+        Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -53,7 +53,7 @@ class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditab
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
+        'password'          => 'hashed',
     ];
 
     public function tenants(): HasMany
@@ -66,6 +66,6 @@ class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditab
         $tenant_context = in_array(InitializeTenancyByDomain::class, $panel->getMiddleware());
         $tenant = tenant('id') !== null;
 
-        return ($tenant_context && $tenant) || (!$tenant_context && !$tenant);
+        return ($tenant_context && $tenant) || (! $tenant_context && ! $tenant);
     }
 }

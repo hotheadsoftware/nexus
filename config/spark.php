@@ -90,17 +90,17 @@ return [
 
     'billables' => [
         'user' => [
-            'model' => User::class,
-            'trial_days' => 14,
+            'model'            => User::class,
+            'trial_days'       => 14,
             'default_interval' => 'monthly',
-            'plans' => [
+            'plans'            => [
                 // TODO - can we do this dynamically instead of putting it into Config?
                 [
-                    'name' => 'Unlimited',
+                    'name'              => 'Unlimited',
                     'short_description' => 'Unlimited Platform Usage & All Features Available',
-                    'monthly_id' => env('PLAN_UNLIMITED_MONTHLY_ID', ''),
-                    'yearly_id' => env('PLAN_UNLIMITED_ANNUAL_ID', ''),
-                    'features' => [
+                    'monthly_id'        => env('PLAN_UNLIMITED_MONTHLY_ID', ''),
+                    'yearly_id'         => env('PLAN_UNLIMITED_ANNUAL_ID', ''),
+                    'features'          => [
                         'All Features Available',
                         'Unlimited Platform Users & Usage',
                         'Up to 3 Companies - Additional Available for $99/mo Each',

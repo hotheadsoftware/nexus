@@ -46,7 +46,7 @@ class Operator extends Authenticatable implements \OwenIt\Auditing\Contracts\Aud
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
+        'password'          => 'hashed',
     ];
 
     public function tenants(): HasMany

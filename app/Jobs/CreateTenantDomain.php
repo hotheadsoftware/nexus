@@ -36,7 +36,7 @@ class CreateTenantDomain implements ShouldQueue
         $top_domain = parse_url(config('app.url'), PHP_URL_HOST);
 
         $domain = Domain::create([
-            'domain' => $sub_domain.'.'.$top_domain,
+            'domain'    => $sub_domain.'.'.$top_domain,
             'tenant_id' => $this->tenant->id,
         ]);
 

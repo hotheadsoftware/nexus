@@ -71,8 +71,8 @@ return [
          */
         'managers' => [
             'sqlite' => Stancl\Tenancy\TenantDatabaseManagers\SQLiteDatabaseManager::class,
-            'mysql' => Stancl\Tenancy\TenantDatabaseManagers\MySQLDatabaseManager::class,
-            'pgsql' => Stancl\Tenancy\TenantDatabaseManagers\PostgreSQLDatabaseManager::class,
+            'mysql'  => Stancl\Tenancy\TenantDatabaseManagers\MySQLDatabaseManager::class,
+            'pgsql'  => Stancl\Tenancy\TenantDatabaseManagers\PostgreSQLDatabaseManager::class,
 
         /**
          * Use this database manager for MySQL to have a DB user created for each tenant database.
@@ -112,7 +112,7 @@ return [
          * Each disk listed in the 'disks' array will be suffixed by the suffix_base, followed by the tenant_id.
          */
         'suffix_base' => 'tenant',
-        'disks' => [
+        'disks'       => [
             'local',
             'public',
             // 's3',
@@ -125,7 +125,7 @@ return [
          */
         'root_override' => [
             // Disks whose roots should be overridden after storage_path() is suffixed.
-            'local' => '%storage_path%/app/',
+            'local'  => '%storage_path%/app/',
             'public' => '%storage_path%/app/public/',
         ],
 
@@ -160,7 +160,7 @@ return [
      * either using the Redis facade or by injecting it as a dependency.
      */
     'redis' => [
-        'prefix_base' => 'tenant_', // Each key in Redis will be prepended by this prefix_base, followed by the tenant id.
+        'prefix_base'          => 'tenant_', // Each key in Redis will be prepended by this prefix_base, followed by the tenant id.
         'prefixed_connections' => [ // Redis connections whose keys are prefixed, to separate one tenant's keys from another.
             // 'default',
         ],
@@ -196,8 +196,8 @@ return [
      * Parameters used by the tenants:migrate command.
      */
     'migration_parameters' => [
-        '--force' => true,
-        '--path' => [database_path('migrations/tenant')],
+        '--force'    => true,
+        '--path'     => [database_path('migrations/tenant')],
         '--realpath' => true,
     ],
 
