@@ -101,9 +101,10 @@ return [
                     'monthly_id' => env('PLAN_UNLIMITED_MONTHLY_ID', ''),
                     'yearly_id' => env('PLAN_UNLIMITED_ANNUAL_ID', ''),
                     'features' => [
-                        'Unlimited Platform Users & Usage',
-                        'Up to 5 Custom Domains',
                         'All Features Available',
+                        'Unlimited Platform Users & Usage',
+                        'Up to 3 Companies - Additional Available for $99/mo Each',
+                        'Up to 5 Custom Domains',
                     ],
                     'archived' => false,
                 ],
