@@ -7,6 +7,7 @@ of providing a scaffold for micro-Saas applications.
 
 ## TODO
 
+- [ ] Finish design of Conditional Registration for Manage panel.
 - [ ] Laravel Audit class has UserResolver. 
   - Extend this and modify for Subscriber. 
   - Update config/audit.php.
@@ -24,10 +25,21 @@ and Manage (tenant) panel (naming subject to revision). The central panel is use
 sign-up, subscription management, and creation of tenant & domain environments. 
 
 The Manage panel is where users will spend most of their time, using the functionality provided
-by the application. They can invite users
+by the application. They can allow user registration here (public users), or they can create
+users in the Admin panel and assign them to the tenant.
+
+The app consists of individual docker containers: App, Database, Cache, Utility. We use Laravel
+Sail for local development. 
+
+### Phase Two: Growing Up
+
+Split Admin and Manage panels into separate applications, behind an ingress controller in k8s.
+Handle domains dynamically, sending central traffic to Admin and all other traffic to Manage.
+Develop locally using Kind or Minikube.
 
 ## Feature List
 
+- [x] [Laravel Spark](https://spark.laravel.com) Billing & Subscription Management
 - [x] [Domain-Based Multi-Database Multi-Tenancy](https://tenancyforlaravel.com/docs/v3/)
 - [x] [Filament v3](https://filamentphp.com/docs) Control Plane (Central Context)
 - [x] [Filament v3](https://filamentphp.com/docs) Application Plane (Tenant Context)
@@ -38,6 +50,7 @@ by the application. They can invite users
 - [x] [Model Change Audits](https://laravel-auditing.com)
 - [x] [Model Tagging](https://spatie.be/docs/laravel-tags/v4/introduction)
 - [x] [User Roles & Permissions](https://spatie.be/docs/laravel-permission/v6/introduction)
+
 - [ ] Custom Artisan Helper Commands
 - [ ] Stretch Goal -- IAC (Infrastructure as Code) with Terraform
     - [ ] S3 Buckets
@@ -61,20 +74,61 @@ Docker Desktop (MacOS, Windows, Linux) or Docker Engine (Linux)
 
 ### Steps
 
-1. Clone the repository
-2. Composer Install
+**Pre-Requisites**: You must have a Laravel Spark account & license. If you're part of the
+Cloud.Inc organization, ask for a copy of <u>auth.json</u>. If you're not, you'll need to purchase
+a license from [Laravel Spark](https://spark.laravel.com) and provide creds during Composer
+install operations.
 
-   a. `composer install` if you have PHP & Composer installed locally, OR
+Instead of having to run all of the commands below, you can clone the repo, then
+run `./setup.sh` from the root directory. This will run everything after the clone
+operation, and install a pre-commit hook for Pint styling. You'll also get the
+option to install some bash aliases to make working with Sail easier.
 
-   b. `docker run -v $(pwd):/app composer install` if you are using Docker
-   
-       You might run into errors around missing certain php extensions, but can override those with flags provided by
-       the error output.
-3. Copy .env.example to .env
-4. ./vendor/bin/sail up -d
-5. ./vendor/bin/sail artisan migrate:fresh --seed
-6. ./vendor/bin/sail npm install
-7. ./vendor/bin/sail npm run dev
+    git clone (your ssh key):/clouddotinc/nexus
+    cd nexus
+    docker run -v $(pwd):/app composer:latest install --ignore-platform-reqs
+    cp .env.example .env
+
+    (edit .env - see Paddle Setup)
+
+    ./vendor/bin/sail up -d
+    ./vendor/bin/sail composer install
+    ./vendor/bin/sail artisan migrate:fresh --seed
+    ./vendor/bin/sail npm install
+    ./vendor/bin/sail npm run dev
+
+#### Paddle Setup
+
+**Pre-requisite**: <u>A domain name that can reach your local machine</u>. You can use something like
+[DuckDNS](https://duckdns.org) + port forwarding (on your router), or you can use a tunneling service 
+like [NGrok](https://ngrok.io). Regardless of your choice, Paddle will need a path to reach your 
+machine with webhook notifications.
+
+1. [Create a Paddle Sandbox account](https://sandbox-vendors.paddle.com)
+2. Create a Product (Catalog > Products)
+3. Add Prices (Unlimited Monthly, Unlimited Annual)
+   a. Note the Price IDs
+   b. Add to .env:
+      1. PLAN_UNLIMITED_MONTHLY_ID=
+      2. PLAN_UNLIMITED_ANNUAL_ID=
+4. Create a Notification Webhook (Developer Tools > Notifications)
+   1. Add your domain name to the URL (http://YOUR_DOMAIN_HERE/paddle/webhook)
+   2. https is optional but then you need SSL termination somewhere.
+   3. Add to .env: PADDLE_WEBHOOK_SECRET=(your secret key from webhook)
+5. Select Events:
+   - transaction.completed
+   - transaction.updated
+   - subscription.activated
+   - subscription.canceled
+   - subscription.created
+   - subscription.paused
+   - subscription.updated
+   - customer.updated
+6. Create & Record an Authentication Code (Developer Tools > Authentication))
+   1. Add to .env: PADDLE_AUTH_CODE=(your auth code)
+   2. (Same Page) Add to .env: PADDLE_SELLER_ID=(your seller ID) 
+
+
 
 ## Usage
 
