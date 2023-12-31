@@ -74,15 +74,21 @@ Docker Desktop (MacOS, Windows, Linux) or Docker Engine (Linux)
 
 ### Steps
 
+#### Prerequisites
+
 **Pre-Requisites**: You must have a Laravel Spark account & license. If you're part of the
 Cloud.Inc organization, ask for a copy of <u>auth.json</u>. If you're not, you'll need to purchase
 a license from [Laravel Spark](https://spark.laravel.com) and provide creds during Composer
 install operations.
 
+#### Method 1: setup.sh
+
 Instead of having to run all of the commands below, you can clone the repo, then
 run `./setup.sh` from the root directory. This will run everything after the clone
 operation, and install a pre-commit hook for Pint styling. You'll also get the
 option to install some bash aliases to make working with Sail easier.
+
+#### Method 2: Manual
 
     git clone (your ssh key):/clouddotinc/nexus
     cd nexus

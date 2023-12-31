@@ -25,8 +25,7 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
 
-        if(!in_array($this->app->request->getHost(), config('tenancy.central_domains')))
-        {
+        if (! in_array($this->app->request->getHost(), config('tenancy.central_domains'))) {
             abort(404);
         }
 
