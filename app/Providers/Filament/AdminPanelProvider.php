@@ -24,14 +24,19 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
+
+        if(!in_array($this->app->request->getHost(), config('tenancy.central_domains')))
+        {
+            abort(404);
+        }
+
         return $panel
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
-            ->authGuard('web')
-            ->registration()
             ->spa()
+            ->login()
+            ->registration()
             ->colors([
                 'primary' => Color::Amber,
             ])
