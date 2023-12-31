@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TenantResource\Pages;
+use App\Filament\Resources\TenantResource\RelationManagers\DomainsRelationManager;
 use App\Models\Tenant;
 use Exception;
 use Filament\Forms;
@@ -64,7 +65,7 @@ class TenantResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            'domains' => DomainsRelationManager::class,
         ];
     }
 
