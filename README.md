@@ -5,16 +5,16 @@
 This is a Laravel 10+ project that incorporates numerous components with the aim
 of providing a scaffold for micro-Saas applications.
 
-## TODO
+## TOP OPEN ISSUES
 
-- [ ] Finish design of Conditional Registration for Manage panel.
-- [ ] Laravel Audit class has UserResolver. 
-  - Extend this and modify for Subscriber. 
-  - Update config/audit.php.
-- [ ] AdminPanelProvider issue with PreventAccessFromTenantDomain (route Login not found issue)
-- [ ] Create a Route53 Helper. 
-  - Only make domain changes in non-local environments.
-  - Feature flag for this? 
+- [ ] If a user is on a tenant domain, the /admin dashboard should result in a 404.
+  - This is not critical but it's annoying me.  
+  - I've tried to resolve this one a few different ways:
+    - Add a middleware to the admin panel. This works, but causes a "route login not defined" error intermittently.
+    - Add a check to the register() method of the admin panel.
+      - If I call abort(404), I get a cache not found error instead.
+      - If I die() I get a blank page (acceptable, but also not great UX. I would prefer a nicely formatted 404).
+      - If I use header('Location: /manage'); exit; I get a redirect loop.
 
 ## Architecture
 
