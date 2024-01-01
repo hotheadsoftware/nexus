@@ -64,7 +64,7 @@ class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditab
     public function canAccessPanel(Panel $panel): bool
     {
         $tenant_context = in_array(InitializeTenancyByDomain::class, $panel->getMiddleware());
-        $tenant = tenant('id') !== null;
+        $tenant         = tenant('id') !== null;
 
         return ($tenant_context && $tenant) || (! $tenant_context && ! $tenant);
     }

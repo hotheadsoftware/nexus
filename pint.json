@@ -2,8 +2,10 @@
     "preset": "laravel",
     "rules": {
         "binary_operator_spaces": {
+            "default": "align_single_space_minimal",
             "operators": {
-                "=>": "align_single_space_minimal"
+                "=>": "align_single_space_minimal",
+                "=": "align_single_space_minimal"
             }
         }
     }

@@ -52,7 +52,7 @@ class Color
     public static function getPanelNames(): array
     {
         $directoryPath = app_path('Providers/Filament');
-        $firstWords = [];
+        $firstWords    = [];
 
         if (is_dir($directoryPath)) {
             if ($dh = opendir($directoryPath)) {
