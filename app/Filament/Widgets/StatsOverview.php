@@ -6,6 +6,7 @@ use App\Models\Tenant;
 use Auth;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Carbon;
 
 class StatsOverview extends BaseWidget
 {
@@ -19,16 +20,27 @@ class StatsOverview extends BaseWidget
 
         $tenants = Tenant::where('user_id', $user->id)->with('domains')->get();
 
-        return [
-            Stat::make('Companies', $tenants->count())
-                ->description('Active Nexus Instances')
-                ->descriptionColor('primary'),
-            Stat::make('Domains', $tenants->sum(fn ($tenant) => $tenant->domains->count()))
-                ->description('Enabled Domains')
-                ->descriptionColor('primary'),
-            Stat::make('Next Invoice', '$2500')
-                ->description('Due December 31')
-                ->descriptionColor('danger'),
-        ];
+        $stats = [];
+
+        $stats[] = Stat::make('Instances', $tenants->count())
+            ->description('Active Nexus Instances')
+            ->descriptionColor('primary');
+
+        $stats[] = Stat::make('Domains', $tenants->sum(fn ($tenant) => $tenant->domains->count()))
+            ->description('Enabled Domains')
+            ->descriptionColor('primary');
+
+        if ($user->onTrial()) {
+            $trial_ends = $user->customer?->trial_ends_at->format('M d, Y') ?? 'Unknown';
+            $stats[]    = Stat::make('Trial Ends', $trial_ends)
+                ->description('Trial Ends')
+                ->descriptionColor('danger');
+        } else {
+            $stats[] = Stat::make('Next Invoice', '$2500')
+                ->description(Carbon::now()->addMonth()->format('M d, Y'))
+                ->descriptionColor('danger');
+        }
+
+        return $stats;
     }
 }
