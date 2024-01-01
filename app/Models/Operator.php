@@ -16,7 +16,7 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 
 class Operator extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditable, FilamentUser
 {
-    use Auditable, AuthenticationLoggable, HasApiTokens, HasFactory, HasRoles, Notifiable;
+    use Auditable, AuthenticationLoggable, HasApiTokens, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
