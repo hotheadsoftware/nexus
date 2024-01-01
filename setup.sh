@@ -16,17 +16,49 @@ if [ ! -f "./composer.json" ]; then
     error_exit "Error: composer.json not found. Is this a Laravel project?"
 fi
 
+if [[ "$(docker images -q laravel-setup:latest 2> /dev/null)" == "" ]]; then
+
+  # We're solving a chicken-and-egg problem here. When you clone this project, you won't have
+  # the vendor folder, and Laravel Sail won't exist yet. Thus, you can't 'sail up -d' to run
+  # the framework, and without Sail you won't (necessarily) have Composer installed.
+
+  # This container is a lightweight container intended to use PHP 8.2 & Composer to install
+  # the dependencies for this project, effectively bootstrapping Sail.
+
+  echo -e "\n${YELLOW}Docker image (laravel-setup:latest) not found. Building...${NC}"
+  docker build -f Dockerfile.Laravel.Setup -t laravel-setup:latest .
+fi
+
 echo -e "\n${YELLOW}Setting up the environment...${NC}"
-docker run -it --rm -v "$(pwd):/app" composer:latest composer install --ignore-platform-reqs || error_exit "Error during Composer install."
+docker run -it --rm -v "$(pwd):/app" laravel-setup:latest composer install --ignore-platform-reqs || error_exit "Error during Composer install."
 
 if [ ! -f "./vendor/bin/sail" ]; then
     error_exit "Error: vendor/bin/sail not found. Please make sure you've run 'composer install'."
 fi
 
 if [ ! -f "./docker-compose.yml" ]; then
-    selected_services="pgsql,redis,mailpit"
-    docker run -it --rm -v "$(pwd):/app" composer:latest php artisan sail:install --with="$selected_services" || error_exit "Error installing Sail."
+    echo -e "\n${YELLOW}Installing Laravel Sail: Which containers do you need?${NC}"
+
+    echo "Available Choices:"
+    echo "mysql - Database Server"
+    echo "pgsql - Database Server"
+    echo "mariadb - Database Server"
+    echo "redis - In-Memory Cache"
+    echo "memcached - In-Memory Cache"
+    echo "meilisearch - App Search Engine"
+    echo "minio - Object Storage Service"
+    echo "mailpit - Outbound Mail Catcher"
+    echo "selenium - Browser Testing"
+    echo "soketi - Websocket Server"
+
+    default_services="pgsql,redis,mailpit"
+    read -p "Enter Laravel services to install (comma-separated) [${default_services}]: " user_input
+    selected_services=${user_input:-$default_services}
+    docker run -it --rm -v "$(pwd):/app" laravel-setup:latest php artisan sail:install --with="$selected_services" || error_exit "Error installing Sail."
 fi
+
+echo -e "\n${YELLOW}Cleaning up the setup container...${NC}"
+docker image rm laravel-setup:latest > /dev/null 2>&1
 
 if [ ! -f "./.env" ] && [ -f "./.env.example" ]; then
     echo -e "\n${YELLOW}Copying .env.example to .env...${NC}"
@@ -39,7 +71,7 @@ echo -e "\n${YELLOW}Starting application services...${NC}"
 container_id=$(docker ps -a --filter "name=pgsql" --format "{{.ID}}")
 
 if [ -n "$container_id" ]; then
-    echo -e "${YELLOW}Checking Database Container Age...${NC}"
+    echo -e "\n${YELLOW}Checking Database Container Age...${NC}"
 
     creation_time=$(docker inspect -f '{{.Created}}' "$container_id" 2>/dev/null)
 
@@ -50,17 +82,17 @@ if [ -n "$container_id" ]; then
         age_sec=$((current_time_sec - creation_time_sec))
 
         if [ "$age_sec" -le 60 ]; then
-            echo "Container was created less than 1 minute ago. Sleeping for 30 seconds."
+            echo -e "\n${RED}Container was created less than 1 minute ago. Sleeping for 30 seconds.${NC}"
             sleep 30
         fi
     fi
 fi
 
 echo -e "\n${YELLOW}Running migrations and seeding the database...${NC}"
-./vendor/bin/sail artisan migrate --seed || error_exit "Error running migrations and seeding database."
+./vendor/bin/sail artisan migrate:fresh --seed || error_exit "Error running migrations and seeding database."
 
 echo -e "\n${YELLOW}Installing NPM packages...${NC}"
-./vendor/bin/sail npm install || error_exit "Error installing NPM packages."
+./vendor/bin/sail bun install || error_exit "Error installing Bun packages."
 
 if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
     echo -e "\n${YELLOW}Setting up Pint on a pre-commit hook...${NC}"
@@ -96,7 +128,9 @@ echo -e "${GREEN}| alias tinker='sail artisan tinker'                           
 echo -e "${GREEN}| alias composer='sail composer'                                                       |${NC}"
 echo -e "${GREEN}|======================================================================================|${NC}"
 
-read -p -r "\nWould you like to install these aliases? (y/n): " user_input
+echo -e "\n"
+# shellcheck disable=SC2162
+read -p "Would you like to install these aliases? (y/n): " user_input
 
 # Case-insensitive comparison of first character & search for negative intent.
 # -- True: y, yes, yeah, yup, yo, yippie-kay-yay, etc.

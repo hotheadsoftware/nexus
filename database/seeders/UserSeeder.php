@@ -13,7 +13,9 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
+        User::firstOrCreate([
+            'email' => config('app.control_plane.user.email'),
+        ], [
             'name'              => config('app.control_plane.user.name'),
             'email'             => config('app.control_plane.user.email'),
             'password'          => Hash::make(config('app.control_plane.user.password')),
