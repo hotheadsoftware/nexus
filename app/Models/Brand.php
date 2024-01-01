@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Helpers\Color;
+use App\Helpers\ColorHelper;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -25,7 +25,7 @@ class Brand extends Model
      */
     public function setColor(string $panel, string $condition, string $color_name): self
     {
-        if (! Color::validColorConfiguration($panel, $condition, $color_name)) {
+        if (! ColorHelper::validColorConfiguration($panel, $condition, $color_name)) {
             throw new Exception("Invalid color configuration: $panel, $condition, $color_name");
         }
 

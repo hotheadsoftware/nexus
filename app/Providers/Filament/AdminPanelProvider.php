@@ -4,7 +4,6 @@ namespace App\Providers\Filament;
 
 use App\Filament\Widgets\CompanyList;
 use App\Filament\Widgets\StatsOverview;
-use App\Http\Middleware\PreventAccessFromTenantDomains;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -24,10 +23,6 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-
-        if (! in_array($this->app->request->getHost(), config('tenancy.central_domains'))) {
-            abort(404);
-        }
 
         return $panel
             ->default()
@@ -50,9 +45,6 @@ class AdminPanelProvider extends PanelProvider
                 StatsOverview::class,
             ])
             ->middleware([
-                // TODO this middleware is causing a weird issue: route 'login' not found on the first
-                // load of the login page after a tenant is created. It works fine after that.
-                // PreventAccessFromTenantDomains::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,

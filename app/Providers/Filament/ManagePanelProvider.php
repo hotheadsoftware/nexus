@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Helpers\ColorHelper;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -35,16 +36,14 @@ class ManagePanelProvider extends PanelProvider
                 $this->app
                     ->get('filament')
                     ->getPanel('manage')
-                    // TODO make this dynamic based on Tenant settings.
-                    ->login()
-                    ->authGuard('operator')
+                    ->registration($brand->allow_registration ?? false)
                     ->colors([
-                        'danger'  => $brand->colors['manage']['danger']  ?? Color::Red,
-                        'primary' => $brand->colors['manage']['primary'] ?? Color::Stone,
-                        'info'    => $brand->colors['manage']['info']    ?? Color::Blue,
-                        'success' => $brand->colors['manage']['success'] ?? Color::Green,
-                        'warning' => $brand->colors['manage']['warning'] ?? Color::Orange,
-                        'gray'    => $brand->colors['manage']['gray']    ?? Color::Green,
+                        'danger'  => ColorHelper::getShades($brand->colors['manage']['danger'] ?? '')  ?? Color::Red,
+                        'primary' => ColorHelper::getShades($brand->colors['manage']['primary'] ?? '') ?? Color::Stone,
+                        'info'    => ColorHelper::getShades($brand->colors['manage']['info'] ?? '')    ?? Color::Blue,
+                        'success' => ColorHelper::getShades($brand->colors['manage']['success'] ?? '') ?? Color::Green,
+                        'warning' => ColorHelper::getShades($brand->colors['manage']['warning'] ?? '') ?? Color::Orange,
+                        'gray'    => ColorHelper::getShades($brand->colors['manage']['gray'] ?? '')    ?? Color::Green,
                     ])
                     ->brandLogo($brand->logo ? asset(Storage::url('images/'.$brand->tenant_id.'/'.$brand->logo)) : '')
                     ->boot();
@@ -52,17 +51,21 @@ class ManagePanelProvider extends PanelProvider
         });
     }
 
+    public function getColors($name): array
+    {
+        return ColorHelper::getShades($name);
+    }
+
     public function panel(Panel $panel): Panel
     {
-        // TODO let Users control registration from the Admin panel.
-        if (true) {
-            $panel->registration();
-        }
 
         return $panel
             ->id(self::PANEL)
             ->path(self::PANEL)
             ->spa()
+            ->login()
+            ->registration()
+            ->authGuard('operator')
             ->middleware([
                 PreventAccessFromCentralDomains::class,
                 InitializeTenancyByDomain::class,

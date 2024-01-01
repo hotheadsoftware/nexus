@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('panel');
             $table->string('logo')->nullable();
             $table->jsonb('colors')->nullable();
+            $table->boolean('allow_registration')->default(true);
             $table->string('headline')->nullable();
             $table->timestamps();
             $table->softDeletes();

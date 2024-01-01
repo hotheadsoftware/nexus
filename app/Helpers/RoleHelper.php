@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-class Role
+class RoleHelper
 {
     const ELEVATED = [
         'admin',

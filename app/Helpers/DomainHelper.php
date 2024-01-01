@@ -12,7 +12,7 @@ namespace App\Helpers;
  * We'll extend from that use-case as we identify needs which don't cleanly
  * fit into a domain model or MVC pattern.
  */
-class Domain
+class DomainHelper
 {
     public function __construct(protected \App\Models\Domain $domain)
     {
@@ -33,5 +33,4 @@ class Domain
     {
         // TODO
     }
-
 }
