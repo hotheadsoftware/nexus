@@ -7,14 +7,11 @@ of providing a scaffold for micro-Saas applications.
 
 ## TOP OPEN ISSUES
 
-- [ ] If a user is on a tenant domain, the /admin dashboard should result in a 404.
-  - This is not critical but it's annoying me.  
-  - I've tried to resolve this one a few different ways:
-    - Add a middleware to the admin panel. This works, but causes a "route login not defined" error intermittently.
-    - Add a check to the register() method of the admin panel.
-      - If I call abort(404), I get a cache not found error instead.
-      - If I die() I get a blank page (acceptable, but also not great UX. I would prefer a nicely formatted 404).
-      - If I use header('Location: /manage'); exit; I get a redirect loop.
+- [ ] Tenant-Space Customization: Headlines and other details
+    - Colors are good, but we need more ability to customize.
+    - Add logo upload support. Do not store locally. 
+        - Use minio locally, s3 in cloud. 
+        - setup flysystem
 
 ## Architecture
 
