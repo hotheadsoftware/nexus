@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Widgets\CompanyList;
 use App\Filament\Widgets\StatsOverview;
+use App\Helpers\NullAuthHelper;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -29,7 +30,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->spa()
-            ->login()
+            ->login(in_array(request()->getHttpHost(), config('tenancy.central_domains')) ? Pages\Auth\Login::class : NullAuthHelper::class)
             ->registration()
             ->colors([
                 'primary' => Color::Amber,
