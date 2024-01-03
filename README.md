@@ -1,42 +1,48 @@
-# Cloud.Inc Nexus
+# CDI Nexus
 
 ## Description
 
-This is a Laravel 10+ project that incorporates numerous components with the aim
-of providing a scaffold for micro-Saas applications.
+This is a Laravel 10+ project that incorporates numerous components with the aim of providing 
+a scaffold for micro-Saas applications.
 
 ## TOP OPEN ISSUES
 
 - [ ] Tenant-Space Customization: Headlines and other details
     - Colors are good, but we need more ability to customize.
-    - Add logo upload support. Do not store locally. 
-        - Use minio locally, s3 in cloud. 
+    - Add logo upload support. Do not store locally.
+        - Use minio locally, s3 in cloud.
         - setup flysystem
 
 ## Architecture
 
-### Phase One: MVP
+Summary: Laravel 10 + Filament v3 + Stancl/Tenancy
 
-This app is a mono-repo, monolithic application. It contains two base panels: Admin (central)
-and Manage (tenant) panel (naming subject to revision). The central panel is used for initial
-sign-up, subscription management, and creation of tenant & domain environments. 
+If you'd like to see the rationale behind these choices, please see the Architectural Decision 
+Records in the `adr` folder.
 
-The Manage panel is where users will spend most of their time, using the functionality provided
-by the application. They can allow user registration here (public users), or they can create
-users in the Admin panel and assign them to the tenant.
+### Phase One: MVP (Monorepo & Monolith)
+
+Nexus is a monolithic application with both front and back end services. It delivers the
+Admin and Manage panels as well as comprehensive documentation on setting up and running
+this app. 
+
+Documentation is provided for users to create and segregate new panels and understand the
+underlying architecture of the application.
 
 The app consists of individual docker containers: App, Database, Cache, Utility. We use Laravel
-Sail for local development. 
+Sail for local development.
 
 ### Phase Two: Growing Up
 
-Split Admin and Manage panels into separate applications, behind an ingress controller in k8s.
-Handle domains dynamically, sending central traffic to Admin and all other traffic to Manage.
-Develop locally using Kind or Minikube.
+Build a Nexus-friendly control plane application. This will allow user impersonation, support
+tickets/chat, tenant migration to new hardware, backup/restore on a per-tenant basis, and other 
+features needed to operate as a service provider. This should also include revenue reporting
+and forecasting and some level of application analytics around usage of the platform. 
 
 ## Feature List
 
-- [x] [Laravel Spark](https://spark.laravel.com) Billing & Subscription Management
+![img.png](panel-architecture.png)
+
 - [x] [Domain-Based Multi-Database Multi-Tenancy](https://tenancyforlaravel.com/docs/v3/)
 - [x] [Filament v3](https://filamentphp.com/docs) Control Plane (Central Context)
 - [x] [Filament v3](https://filamentphp.com/docs) Application Plane (Tenant Context)
@@ -47,7 +53,6 @@ Develop locally using Kind or Minikube.
 - [x] [Model Change Audits](https://laravel-auditing.com)
 - [x] [Model Tagging](https://spatie.be/docs/laravel-tags/v4/introduction)
 - [x] [User Roles & Permissions](https://spatie.be/docs/laravel-permission/v6/introduction)
-
 - [ ] Custom Artisan Helper Commands
 - [ ] Stretch Goal -- IAC (Infrastructure as Code) with Terraform
     - [ ] S3 Buckets
@@ -73,11 +78,6 @@ Docker Desktop (MacOS, Windows, Linux) or Docker Engine (Linux)
 
 #### Prerequisites
 
-**Pre-Requisites**: You must have a Laravel Spark account & license. If you're part of the
-Cloud.Inc organization, ask for a copy of <u>auth.json</u>. If you're not, you'll need to purchase
-a license from [Laravel Spark](https://spark.laravel.com) and provide creds during Composer
-install operations.
-
 #### Method 1: setup.sh
 
 Instead of having to run all of the commands below, you can clone the repo, then
@@ -92,46 +92,13 @@ option to install some bash aliases to make working with Sail easier.
     docker run -v $(pwd):/app composer:latest install --ignore-platform-reqs
     cp .env.example .env
 
-    (edit .env - see Paddle Setup)
+    (edit .env)
 
     ./vendor/bin/sail up -d
     ./vendor/bin/sail composer install
     ./vendor/bin/sail artisan migrate:fresh --seed
     ./vendor/bin/sail npm install
     ./vendor/bin/sail npm run dev
-
-#### Paddle Setup
-
-**Pre-requisite**: <u>A domain name that can reach your local machine</u>. You can use something like
-[DuckDNS](https://duckdns.org) + port forwarding (on your router), or you can use a tunneling service 
-like [NGrok](https://ngrok.io). Regardless of your choice, Paddle will need a path to reach your 
-machine with webhook notifications.
-
-1. [Create a Paddle Sandbox account](https://sandbox-vendors.paddle.com)
-2. Create a Product (Catalog > Products)
-3. Add Prices (Unlimited Monthly, Unlimited Annual)
-   a. Note the Price IDs
-   b. Add to .env:
-      1. PLAN_UNLIMITED_MONTHLY_ID=
-      2. PLAN_UNLIMITED_ANNUAL_ID=
-4. Create a Notification Webhook (Developer Tools > Notifications)
-   1. Add your domain name to the URL (http://YOUR_DOMAIN_HERE/paddle/webhook)
-   2. https is optional but then you need SSL termination somewhere.
-   3. Add to .env: PADDLE_WEBHOOK_SECRET=(your secret key from webhook)
-5. Select Events:
-   - transaction.completed
-   - transaction.updated
-   - subscription.activated
-   - subscription.canceled
-   - subscription.created
-   - subscription.paused
-   - subscription.updated
-   - customer.updated
-6. Create & Record an Authentication Code (Developer Tools > Authentication))
-   1. Add to .env: PADDLE_AUTH_CODE=(your auth code)
-   2. (Same Page) Add to .env: PADDLE_SELLER_ID=(your seller ID) 
-
-
 
 ## Usage
 
@@ -141,6 +108,28 @@ bootstraps most connections/resources so that they are tenant-aware. This
 means that database connections, queues, jobs, events, etc, are all scoped
 to the client.
 
+### User Aliases & Purpose
+
+Nexus is a multi-dashboard solution with the same underlying database. This
+As an example implementation, we provide Admin and Manage dashboards.
+
+The Admin dashboard is the central context. It is used for initial sign-up,
+subscription management, and creation of tenant & domain environments. These
+people are referred to as Administrators and will use an `adminsitators`
+table with the same initial schema as the `users` table. A custom guard is
+used to authenticate these users.
+
+The Manage dashboard is in the tenant context, and is where people will
+spend most of their time, using the functionality provided by the application.
+People in the Manage dashboard authentication context are referred to as
+Managers. They will use a `managers` table with the same initial schema
+as the `users` table. A custom guard is used to authenticate these users.
+
+If we create a dashboard called Buyer, then people in the Buyer dashboard
+authentication context are referred to as Buyers. They will use a `buyers`
+table with the same initial schema as the `users` table. A custom guard is
+used to authenticate these users.
+
 ### Tenancy & Storage
 
 Because of the way that `stancl/tenancy` works, we need to make sure that
@@ -149,6 +138,6 @@ path. (The tenancy package can do this automatically, but it introduces
 some undesirable behavior with Filament assets, so I've opted to do it
 manually.)
 
-- [ ] TODO: figure out how to make this work with the tenancy package; there may be a way to block certain paths from
-  being rewritten.
+- [ ] TODO: figure out how to make this work with the tenancy package; there 
+may be a way to block certain paths from being rewritten.
 
