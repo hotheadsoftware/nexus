@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Widgets;
+namespace App\Filament\Widgets\Admin;
 
 use App\Models\Tenant;
 use Filament\Tables;

@@ -3,8 +3,8 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Overrides\LoginNotFound;
-use App\Filament\Widgets\CompanyList;
-use App\Filament\Widgets\StatsOverview;
+use App\Filament\Widgets\Admin\StatsOverview;
+use App\Filament\Widgets\Admin\CompanyList;
 use App\Helpers\DomainHelper;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
