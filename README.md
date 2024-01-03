@@ -12,6 +12,13 @@ a scaffold for micro-Saas applications.
     - Add logo upload support. Do not store locally.
         - Use minio locally, s3 in cloud.
         - setup flysystem
+- [ ] Need documentation (step-by-step) for adding new user types / panels
+    - [ ] Buyer
+    - [ ] Supplier
+    - [ ] Other
+- [ ] Can we rely on the Tenancy package to do asset rewrites, while ensuring that it only works
+      on particular paths? (e.g. "don't rewrite public/assets, only rewrite public/storage")
+
 
 ## Architecture
 
@@ -44,6 +51,9 @@ and forecasting and some level of application analytics around usage of the plat
 ![img_1.png](img_1.png)
 
 - [x] [Domain-Based Multi-Database Multi-Tenancy](https://tenancyforlaravel.com/docs/v3/)
+- [x] Multi-Tier User Support (Admin, Manager, Buyer, Supplier, etc)
+  - [x] Admin & Manager out of the box
+  - [ ] Documentation for Extending to Buyer, Supplier, or Other User Types
 - [x] [Filament v3](https://filamentphp.com/docs) Control Plane (Central Context)
 - [x] [Filament v3](https://filamentphp.com/docs) Application Plane (Tenant Context)
 - [x] [Laravel Telescope](https://laravel.com/docs/10.x/telescope)
@@ -138,6 +148,5 @@ path. (The tenancy package can do this automatically, but it introduces
 some undesirable behavior with Filament assets, so I've opted to do it
 manually.)
 
-- [ ] TODO: figure out how to make this work with the tenancy package; there 
-may be a way to block certain paths from being rewritten.
+
 
