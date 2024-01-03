@@ -41,7 +41,7 @@ and forecasting and some level of application analytics around usage of the plat
 
 ## Feature List
 
-![img.png](panel-architecture.png)
+![img.png](img.png)
 
 - [x] [Domain-Based Multi-Database Multi-Tenancy](https://tenancyforlaravel.com/docs/v3/)
 - [x] [Filament v3](https://filamentphp.com/docs) Control Plane (Central Context)
