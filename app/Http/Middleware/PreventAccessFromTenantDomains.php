@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use App\Helpers\DomainHelper;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
@@ -33,9 +34,9 @@ class PreventAccessFromTenantDomains
             return $next($request);
         }
 
-        return in_array($request->getHost(), config('tenancy.central_domains'))
-            ? $next($request)
-            : $this->central404->__invoke($request);
+        return DomainHelper::inTenantContext()
+            ? $this->central404->__invoke($request)
+            : $next($request);
     }
 
     public static function routeHasMiddleware(Route $route, $middleware): bool
@@ -47,7 +48,7 @@ class PreventAccessFromTenantDomains
         $middlewareGroups = Router::getMiddlewareGroups();
         foreach ($route->gatherMiddleware() as $inner) {
             if (! $inner instanceof Closure && isset($middlewareGroups[$inner]) && in_array($middleware,
-                $middlewareGroups[$inner], true)) {
+                    $middlewareGroups[$inner], true)) {
                 return true;
             }
         }

@@ -2,13 +2,15 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Overrides\LoginNotFound;
 use App\Filament\Widgets\CompanyList;
 use App\Filament\Widgets\StatsOverview;
-use App\Helpers\NullAuthHelper;
+use App\Helpers\DomainHelper;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages;
+use Filament\Pages\Auth\Login;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -30,7 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->spa()
-            ->login(in_array(request()->getHttpHost(), config('tenancy.central_domains')) ? Pages\Auth\Login::class : NullAuthHelper::class)
+            ->login(DomainHelper::inTenantContext() ? LoginNotFound::class : Login::class)
             ->registration()
             ->colors([
                 'primary' => Color::Amber,

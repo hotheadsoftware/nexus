@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use App\Models\Domain;
+
 /**
  * Class Domain (Helper)
  *
@@ -14,22 +16,26 @@ namespace App\Helpers;
  */
 class DomainHelper
 {
-    public function __construct(protected \App\Models\Domain $domain)
+    public static function inTenantContext(): bool
     {
-        //
+        if (in_array(request()->getHost(), config('tenancy.central_domains'))) {
+            return false;
+        }
+
+        return true;
     }
 
-    public function addDomain()
+    public static function addDomain()
     {
         // TODO
     }
 
-    public function removeDomain($domain)
+    public static function removeDomain($domain)
     {
         // TODO
     }
 
-    public function domainExists($domain)
+    public static function domainExists($domain)
     {
         // TODO
     }
