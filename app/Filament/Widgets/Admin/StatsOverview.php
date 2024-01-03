@@ -28,7 +28,7 @@ class StatsOverview extends BaseWidget
             ->description('Active Nexus Instances')
             ->descriptionColor('primary');
 
-        $stats[] = Stat::make('Domains', $tenants->sum(fn($tenant) => $tenant->domains->count()))
+        $stats[] = Stat::make('Domains', $tenants->sum(fn ($tenant) => $tenant->domains->count()))
             ->description('Enabled Domains')
             ->descriptionColor('primary');
 
