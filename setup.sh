@@ -30,7 +30,7 @@ if [[ "$(docker images -q laravel-setup:latest 2> /dev/null)" == "" ]]; then
 fi
 
 echo -e "\n${YELLOW}Setting up the environment...${NC}"
-docker run -it --rm -v "$(pwd):/app" laravel-setup:latest composer install --ignore-platform-reqs || error_exit "Error during Composer install."
+docker run -it --rm -v "$(pwd):/app" -u "$(id -u):$(id -g)" laravel-setup:latest composer install --ignore-platform-reqs || error_exit "Error during Composer install."
 
 if [ ! -f "./vendor/bin/sail" ]; then
     error_exit "Error: vendor/bin/sail not found. Please make sure you've run 'composer install'."
@@ -54,7 +54,7 @@ if [ ! -f "./docker-compose.yml" ]; then
     default_services="pgsql,redis,mailpit"
     read -p "Enter Laravel services to install (comma-separated) [${default_services}]: " user_input
     selected_services=${user_input:-$default_services}
-    docker run -it --rm -v "$(pwd):/app" laravel-setup:latest php artisan sail:install --with="$selected_services" || error_exit "Error installing Sail."
+    docker run -it --rm -v "$(pwd):/app" -u "$(id -u):$(id -g)" laravel-setup:latest php artisan sail:install --with="$selected_services" || error_exit "Error installing Sail."
 fi
 
 echo -e "\n${YELLOW}Cleaning up the setup container...${NC}"
