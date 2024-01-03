@@ -48,7 +48,7 @@ class PreventAccessFromTenantDomains
         $middlewareGroups = Router::getMiddlewareGroups();
         foreach ($route->gatherMiddleware() as $inner) {
             if (! $inner instanceof Closure && isset($middlewareGroups[$inner]) && in_array($middleware,
-                    $middlewareGroups[$inner], true)) {
+                $middlewareGroups[$inner], true)) {
                 return true;
             }
         }
