@@ -102,7 +102,7 @@ if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
 #!/bin/sh
 
 # Run Pint to fix code style issues
-./vendor/bin/pint || { echo -e "${RED}Pint execution failed.${NC}"; exit 1; }
+./vendor/bin/sail exec -T ./vendor/bin/pint
 
 # Check if Pint has made any changes
 if git status --porcelain | grep -qE '^[AM]+\s+.*\.(php)$'; then
