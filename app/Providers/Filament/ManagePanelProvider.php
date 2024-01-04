@@ -18,6 +18,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -38,14 +39,14 @@ class ManagePanelProvider extends PanelProvider
                     ->getPanel('manage')
                     ->registration($brand->allow_registration ?? false)
                     ->colors([
-                        'danger'  => ColorHelper::getShades($brand->colors['manage']['danger'] ?? '')  ?? Color::Red,
+                        'danger'  => ColorHelper::getShades($brand->colors['manage']['danger'] ?? '') ?? Color::Red,
                         'primary' => ColorHelper::getShades($brand->colors['manage']['primary'] ?? '') ?? Color::Stone,
-                        'info'    => ColorHelper::getShades($brand->colors['manage']['info'] ?? '')    ?? Color::Blue,
+                        'info'    => ColorHelper::getShades($brand->colors['manage']['info'] ?? '') ?? Color::Blue,
                         'success' => ColorHelper::getShades($brand->colors['manage']['success'] ?? '') ?? Color::Green,
                         'warning' => ColorHelper::getShades($brand->colors['manage']['warning'] ?? '') ?? Color::Orange,
-                        'gray'    => ColorHelper::getShades($brand->colors['manage']['gray'] ?? '')    ?? Color::Green,
+                        'gray'    => ColorHelper::getShades($brand->colors['manage']['gray'] ?? '') ?? Color::Green,
                     ])
-                    ->brandLogo($brand->logo ? asset(Storage::url('images/'.$brand->tenant_id.'/'.$brand->logo)) : '')
+                    ->brandLogo(fn() => view('filament.logo.manage'))
                     ->boot();
             }
         });
