@@ -70,7 +70,7 @@ class BrandResource extends Resource
                 Tables\Columns\TextColumn::make('panel')->searchable()->sortable(),
                 Tables\Columns\IconColumn::make('allow_registration')->searchable()->sortable()->boolean()->alignCenter()->label('Registration Open'),
                 Tables\Columns\TextColumn::make('created_at')->searchable()->sortable(),
-                Tables\Columns\SpatieMediaLibraryImageColumn::make('logo')->collection('logo')->label('Logo')
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('logo')->collection('logo')->label('Logo'),
             ])
             ->filters([
                 //
