@@ -16,7 +16,6 @@ use Illuminate\Support\Str;
  */
 class ColorHelper
 {
-
     public static function getShades(string $name): ?array
     {
         if ($name === '') {
@@ -60,7 +59,7 @@ class ColorHelper
         $b = dechex($b);
 
         return '#'.str_pad($r, 2, '0', STR_PAD_LEFT).str_pad($g, 2, '0', STR_PAD_LEFT).str_pad($b, 2, '0',
-                STR_PAD_LEFT);
+            STR_PAD_LEFT);
     }
 
     /**
@@ -107,7 +106,6 @@ class ColorHelper
      *     $condition => Color::hex($color)
      *   ];
      * })->toArray();
-     *
      */
     public static function getPanelColors(): array
     {
