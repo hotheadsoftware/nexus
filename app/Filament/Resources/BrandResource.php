@@ -3,11 +3,11 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\BrandResource\Pages;
+use App\Helpers\ColorHelper;
 use App\Models\Brand;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Support\Colors\Color;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
@@ -38,6 +38,12 @@ class BrandResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $conditions    = ColorHelper::getPanelColors();
+        $color_pickers = [];
+        foreach ($conditions as $condition => $color) {
+            $color_pickers[] = Forms\Components\ColorPicker::make("colors.manage.$condition")->hexColor()->live()->default($color['500']);
+        }
+
         return $form
             ->schema([
                 Forms\Components\Section::make('Brand Details')
@@ -47,16 +53,10 @@ class BrandResource extends Resource
                         Forms\Components\TextInput::make('name')->autofocus()->required(),
                         Forms\Components\TextInput::make('headline')->autofocus()->required(),
                         Forms\Components\TextInput::make('panel')->autofocus()->required(),
+                        Forms\Components\SpatieMediaLibraryFileUpload::make('logo')->collection('logo')->autofocus()->required(),
                     ]),
                 Forms\Components\Section::make('Brand Colors')
-                    ->schema([
-                        Forms\Components\ColorPicker::make('colors.manage.danger')->hexColor()->live()->default(Color::Red['500']),
-                        Forms\Components\ColorPicker::make('colors.manage.primary')->hexColor()->live()->default(Color::Amber['500']),
-                        Forms\Components\ColorPicker::make('colors.manage.info')->hexColor()->live()->default(Color::Sky['500']),
-                        Forms\Components\ColorPicker::make('colors.manage.success')->hexColor()->live()->default(Color::Green['500']),
-                        Forms\Components\ColorPicker::make('colors.manage.warning')->hexColor()->live()->default(Color::Orange['500']),
-                        Forms\Components\ColorPicker::make('colors.manage.gray')->hexColor()->live()->default(Color::Slate['500']),
-                    ])->columns(2),
+                    ->schema($color_pickers)->columns(2),
             ]);
     }
 
@@ -70,6 +70,7 @@ class BrandResource extends Resource
                 Tables\Columns\TextColumn::make('panel')->searchable()->sortable(),
                 Tables\Columns\IconColumn::make('allow_registration')->searchable()->sortable()->boolean()->alignCenter()->label('Registration Open'),
                 Tables\Columns\TextColumn::make('created_at')->searchable()->sortable(),
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('logo')->collection('logo')->label('Logo')
             ])
             ->filters([
                 //

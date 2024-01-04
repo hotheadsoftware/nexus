@@ -16,12 +16,6 @@ use Illuminate\Support\Str;
  */
 class ColorHelper
 {
-    public static function validColorConfiguration(string $panel, string $condition, string $color_name): bool
-    {
-        return self::validColor($color_name)
-            && self::validCondition($condition)
-            && self::validPanelName($panel);
-    }
 
     public static function getShades(string $name): ?array
     {
@@ -66,13 +60,13 @@ class ColorHelper
         $b = dechex($b);
 
         return '#'.str_pad($r, 2, '0', STR_PAD_LEFT).str_pad($g, 2, '0', STR_PAD_LEFT).str_pad($b, 2, '0',
-            STR_PAD_LEFT);
+                STR_PAD_LEFT);
     }
 
     /**
      * @throws Exception
      */
-    public static function validateRgb($r, $g, $b): void
+    public static function validateRgb($r, $g, $b): bool
     {
         foreach ([$r, $g, $b] as $rgb) {
             if (! is_numeric($rgb)) {
@@ -82,6 +76,8 @@ class ColorHelper
                 throw new Exception('RGB values must be between 0 and 255.');
             }
         }
+
+        return true;
     }
 
     public static function hexColor(string $name): ?string
@@ -95,29 +91,32 @@ class ColorHelper
         return null;
     }
 
-    public static function validColor(string $color): bool
+    /**
+     * If we ever want to truly customize the default Nexus color scheme,
+     * do it here:
+     *
+     * return collect([
+     *   'danger'  => "#000000", // could be pulled from .env
+     *   'gray'    => "#000000",
+     *   'info'    => "#000000",
+     *   'primary' => "#000000",
+     *   'success' => "#000000",
+     *   'warning' => "#000000",
+     * ])->mapWithKeys(function($color,$condition) {
+     *   return [
+     *     $condition => Color::hex($color)
+     *   ];
+     * })->toArray();
+     *
+     */
+    public static function getPanelColors(): array
     {
-        return in_array($color, self::getColorNames());
-    }
-
-    public static function validCondition(string $condition): bool
-    {
-        return in_array($condition, self::getColorConditions());
-    }
-
-    public static function validPanelName(string $panel): bool
-    {
-        return in_array($panel, self::getPanelNames());
-    }
-
-    public static function getColorNames(): array
-    {
-        return array_keys(Color::all());
+        return (new ColorManager)->getColors();
     }
 
     public static function getColorConditions(): array
     {
-        return array_keys(ColorManager::getColors());
+        return array_keys(static::getPanelColors());
     }
 
     /**

@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
-use App\Helpers\ColorHelper;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Brand extends Model
+class Brand extends Model implements HasMedia
 {
+    use InteractsWithMedia;
+
     protected $connection = 'central';
 
     protected $casts = [
@@ -20,24 +23,12 @@ class Brand extends Model
         return $this->belongsTo(Tenant::class);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function setColor(string $panel, string $condition, string $color_name): self
+    public function logo(): string
     {
-        if (! ColorHelper::validColorConfiguration($panel, $condition, $color_name)) {
-            throw new Exception("Invalid color configuration: $panel, $condition, $color_name");
+        try {
+            return $this->getFirstMediaUrl('logo');
+        } catch (Exception $e) {
+            return '';
         }
-
-        // Get the current colors array
-        $colors = $this->colors ?? [];
-
-        // Set the new color
-        $colors[$panel][$condition] = $color_name;
-
-        // Update the colors attribute
-        $this->colors = $colors;
-
-        return $this;
     }
 }
