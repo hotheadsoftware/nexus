@@ -63,10 +63,20 @@ class DomainResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('domain')->searchable()->sortable(),
-                Tables\Columns\CheckboxColumn::make('is_subdomain')->label('Subdomain?')->sortable()->disabled(),
-                Tables\Columns\TextColumn::make('tenant.name')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('created_at')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('domain')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\IconColumn::make('is_subdomain')
+                    ->label('Subdomain?')
+                    ->sortable()
+                    ->boolean()
+                    ->alignCenter(),
+                Tables\Columns\TextColumn::make('tenant.name')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->searchable()
+                    ->sortable(),
             ])
             ->filters([
                 //
