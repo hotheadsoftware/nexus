@@ -8,7 +8,7 @@ Accepted - 2024-01-03
 
 Nexus is a Saas-application scaffold intended to make it easy to stand up a multi-database, multi-tenant application.
 To maintain maximum flexibility, we want to avoid any assumptions about the billing model that will be used by the
-application. This means that we will not include any billing functionality in the core application.
+application. 
 
 ## Decision
 
