@@ -3,12 +3,10 @@
 namespace App\Filament\Widgets\Admin;
 
 use App\Models\Tenant;
-use App\Models\User;
 use Auth;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Carbon;
-use Spark\Billable;
 
 class StatsOverview extends BaseWidget
 {
@@ -32,18 +30,9 @@ class StatsOverview extends BaseWidget
             ->description('Enabled Domains')
             ->descriptionColor('primary');
 
-        if (in_array(Billable::class, class_uses(User::class))) {
-            if ($user->onTrial()) {
-                $trial_ends = $user->customer?->trial_ends_at->format('M d, Y') ?? 'Unknown';
-                $stats[]    = Stat::make('Trial Ends', $trial_ends)
-                    ->description('Trial Ends')
-                    ->descriptionColor('danger');
-            } else {
-                $stats[] = Stat::make('Next Invoice', '$2500')
-                    ->description(Carbon::now()->addMonth()->format('M d, Y'))
-                    ->descriptionColor('danger');
-            }
-        }
+        $stats[] = Stat::make('Next Invoice', '$2500')
+            ->description(Carbon::now()->addMonth()->format('M d, Y'))
+            ->descriptionColor('danger');
 
         return $stats;
     }

@@ -14,6 +14,8 @@ class CompanyList extends BaseWidget
      */
     protected static ?string $pollingInterval = '30s';
 
+    protected static ?string $heading = 'Instances';
+
     /**
      * Widget Layout & Order
      */
@@ -31,6 +33,10 @@ class CompanyList extends BaseWidget
                 Tables\Columns\TextColumn::make('name')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('domains.domain')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('created_at')->searchable()->sortable(),
+            ])->pluralModelLabel($this::$heading)->headerActions([
+                Tables\Actions\CreateAction::make('Create Instance')
+                    ->url(route('filament.admin.resources.instances.create'))
+                    ->icon('heroicon-o-plus-circle'),
             ]);
     }
 }
