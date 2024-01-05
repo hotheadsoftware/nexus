@@ -11,12 +11,25 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class BrandResource extends Resource
 {
     protected static ?string $model = Brand::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    protected static ?int $navigationSort = 3;
+
+    /**
+     * This removes the Brands menu item from the navigation if there are no
+     * tenants created for this user, to prevent confusion and some errors.
+     * We'll apply this to all resources to keep the navigation clean.
+     */
+    public static function canViewAny(): bool
+    {
+        return Auth::user()?->tenants->count() > 0;
+    }
 
     /**
      * Users cannot create brands. These are created in the backend when a new tenant is created.
