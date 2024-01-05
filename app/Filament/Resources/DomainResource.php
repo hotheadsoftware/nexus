@@ -19,7 +19,7 @@ class DomainResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-globe-alt';
 
     /**
      * This removes the Domains menu item from the navigation if there are no
