@@ -46,7 +46,7 @@ and forecasting and some level of application analytics around usage of the plat
 
 ## Feature List
 
-![img_1.png](img_1.png)
+![img_2.png](img_2.png)
 
 - [x] [Domain-Based Multi-Database Multi-Tenancy](https://tenancyforlaravel.com/docs/v3/)
 - [x] Multi-Tier User Support (Admin, Manager, Buyer, Supplier, etc)
