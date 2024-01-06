@@ -7,19 +7,17 @@ a scaffold for micro-Saas applications.
 
 ## TOP OPEN ISSUES
 
-- [ ] Tenant-Space Customization: Headlines and other details
-    - Colors are good, but we need more ability to customize.
-    - Add logo upload support. Do not store locally.
-        - Use minio locally, s3 in cloud.
-        - setup flysystem
-- [ ] Need documentation (step-by-step) for adding new user types / panels
-    - [ ] Buyer
-    - [ ] Supplier
-    - [ ] Other
-- [ ] Can we rely on the Tenancy package to do asset rewrites, while ensuring that it only works
-      on particular paths? (e.g. "don't rewrite public/assets, only rewrite public/storage")
+- [ ] Documentation
+  - [ ] Docusaurus or Something Else?
+  - [ ] What this is and why it exists
+  - [ ] Multiple User Types / Access Levels or Patterns
+  - [ ] Creating a new panel
+- [ ] Tenant APIs
+  - [ ] UI to manage API Tokens
+  - [ ] Figure out Tenant API Access Scoped to a Panel
+    - Probably involves middleware Config override for `sanctum.guard`
 
-
+    
 ## Architecture
 
 Summary: Laravel 10 + Filament v3 + Stancl/Tenancy
@@ -63,20 +61,13 @@ and forecasting and some level of application analytics around usage of the plat
 - [x] [Model Change Audits](https://laravel-auditing.com)
 - [x] [Model Tagging](https://spatie.be/docs/laravel-tags/v4/introduction)
 - [x] [User Roles & Permissions](https://spatie.be/docs/laravel-permission/v6/introduction)
+- [ ] Panel-Scoped Tenant-Aware REST API Routes
+  - [x] Routes Stubbed
+  - [ ] Middleware to Scope Auth
+  - [ ] Authentication
 - [ ] Custom Artisan Helper Commands
 - [ ] Stretch Goal -- IAC (Infrastructure as Code) with Terraform
-    - [ ] S3 Buckets
-    - [ ] CloudFront Distributions
-    - [ ] Route53 DNS Records
-    - [ ] ACM Certificates
-    - [ ] ECS Cluster, Task Definitions, Services
-    - [ ] RDS Database
-    - [ ] Redis Cache
-    - [ ] SNS Topics
-    - [ ] SQS Queues
 - [ ] Stretch Goal -- CI/CD with GitHub Actions
-    - [ ] Deploy Terraform Infrastructure
-    - [ ] Build & Deploy Application
 
 ## Installation
 
