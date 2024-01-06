@@ -31,7 +31,16 @@ class RouteServiceProvider extends ServiceProvider
         $this->routes(function () {
             $this->mapApiRoutes();
             $this->mapWebRoutes();
+            $this->mapTenantApiRoutes();
         });
+    }
+
+    protected function mapTenantApiRoutes(): void
+    {
+        Route::prefix('api')
+            ->middleware('api')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/tenant_api.php'));
     }
 
     protected function mapWebRoutes(): void
