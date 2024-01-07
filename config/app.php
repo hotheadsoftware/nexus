@@ -171,8 +171,8 @@ return [
         App\Providers\TenancyServiceProvider::class,
         App\Providers\HorizonServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,
-        App\Providers\Filament\AdminPanelProvider::class,
-        App\Providers\Filament\ManagePanelProvider::class,
+        App\Providers\Filament\AccountPanelProvider::class,
+        App\Providers\Filament\OperatePanelProvider::class,
     ])->toArray(),
 
     /*

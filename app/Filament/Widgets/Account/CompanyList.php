@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Widgets\Admin;
+namespace App\Filament\Widgets\Account;
 
 use App\Models\Tenant;
 use Filament\Tables;
@@ -35,7 +35,7 @@ class CompanyList extends BaseWidget
                 Tables\Columns\TextColumn::make('created_at')->searchable()->sortable(),
             ])->pluralModelLabel($this::$heading)->headerActions([
                 Tables\Actions\CreateAction::make('Create Instance')
-                    ->url(route('filament.admin.resources.instances.create'))
+                    ->url(route('filament.account.resources.instances.create'))
                     ->icon('heroicon-o-plus-circle'),
             ]);
     }

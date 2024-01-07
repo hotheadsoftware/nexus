@@ -3,8 +3,8 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Overrides\LoginNotFound;
-use App\Filament\Widgets\Admin\CompanyList;
-use App\Filament\Widgets\Admin\StatsOverview;
+use App\Filament\Widgets\Account\CompanyList;
+use App\Filament\Widgets\Account\StatsOverview;
 use App\Helpers\DomainHelper;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -22,15 +22,17 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class AdminPanelProvider extends PanelProvider
+class AccountPanelProvider extends PanelProvider
 {
+    public const PANEL = 'account';
+
     public function panel(Panel $panel): Panel
     {
 
         return $panel
             ->default()
-            ->id('admin')
-            ->path('admin')
+            ->id(self::PANEL)
+            ->path(self::PANEL)
             ->spa()
             ->login(DomainHelper::inTenantContext() ? LoginNotFound::class : Login::class)
             ->registration()

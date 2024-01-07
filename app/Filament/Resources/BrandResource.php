@@ -54,7 +54,7 @@ class BrandResource extends Resource
         $conditions    = ColorHelper::getPanelColors();
         $color_pickers = [];
         foreach ($conditions as $condition => $color) {
-            $color_pickers[] = Forms\Components\ColorPicker::make("colors.manage.$condition")->hexColor()->live()->default($color['500']);
+            $color_pickers[] = Forms\Components\ColorPicker::make("colors.$condition")->hexColor()->live()->default($color['500']);
         }
 
         return $form
