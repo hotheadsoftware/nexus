@@ -21,9 +21,9 @@ use Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
-class ManagePanelProvider extends PanelProvider
+class OperatePanelProvider extends PanelProvider
 {
-    public const PANEL = 'manage';
+    public const PANEL = 'operate';
 
     public function register(): void
     {
@@ -34,25 +34,20 @@ class ManagePanelProvider extends PanelProvider
             if ($brand) {
                 $this->app
                     ->get('filament')
-                    ->getPanel('manage')
+                    ->getPanel(self::PANEL)
                     ->registration($brand->allow_registration ?? false)
                     ->colors([
-                        'danger'  => ColorHelper::getShades($brand->colors['manage']['danger'] ?? '')  ?? Color::Red,
-                        'primary' => ColorHelper::getShades($brand->colors['manage']['primary'] ?? '') ?? Color::Stone,
-                        'info'    => ColorHelper::getShades($brand->colors['manage']['info'] ?? '')    ?? Color::Blue,
-                        'success' => ColorHelper::getShades($brand->colors['manage']['success'] ?? '') ?? Color::Green,
-                        'warning' => ColorHelper::getShades($brand->colors['manage']['warning'] ?? '') ?? Color::Orange,
-                        'gray'    => ColorHelper::getShades($brand->colors['manage']['gray'] ?? '')    ?? Color::Green,
+                        'danger'  => ColorHelper::getShades($brand->colors['danger'] ?? '')  ?? Color::Red,
+                        'primary' => ColorHelper::getShades($brand->colors['primary'] ?? '') ?? Color::Stone,
+                        'info'    => ColorHelper::getShades($brand->colors['info'] ?? '')    ?? Color::Blue,
+                        'success' => ColorHelper::getShades($brand->colors['success'] ?? '') ?? Color::Green,
+                        'warning' => ColorHelper::getShades($brand->colors['warning'] ?? '') ?? Color::Orange,
+                        'gray'    => ColorHelper::getShades($brand->colors['gray'] ?? '')    ?? Color::Green,
                     ])
-                    ->brandLogo(fn () => view('filament.logo.manage'))
+                    ->brandLogo(fn () => view('filament.logo.'.self::PANEL))
                     ->boot();
             }
         });
-    }
-
-    public function getColors($name): array
-    {
-        return ColorHelper::getShades($name);
     }
 
     public function panel(Panel $panel): Panel
@@ -64,7 +59,7 @@ class ManagePanelProvider extends PanelProvider
             ->spa()
             ->login()
             ->registration()
-            ->authGuard('operator')
+            ->authGuard(self::PANEL)
             ->middleware([
                 PreventAccessFromCentralDomains::class,
                 InitializeTenancyByDomain::class,
@@ -86,12 +81,15 @@ class ManagePanelProvider extends PanelProvider
                 'warning' => Color::Orange,
                 'gray'    => Color::Green,
             ])
-            ->discoverResources(in: app_path('Filament/Manage/Resources'), for: 'App\\Filament\\Manage\\Resources')
-            ->discoverPages(in: app_path('Filament/Manage/Pages'), for: 'App\\Filament\\Manage\\Pages')
+            ->discoverResources(in: app_path('Filament/'.ucfirst(self::PANEL).'/Resources'),
+                for: 'App\\Filament\\'.ucfirst(self::PANEL).'\\Resources')
+            ->discoverPages(in: app_path('Filament/'.ucfirst(self::PANEL).'/Pages'),
+                for: 'App\\Filament\\'.ucfirst(self::PANEL).'\\Pages')
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Manage/Widgets'), for: 'App\\Filament\\Manage\\Widgets')
+            ->discoverWidgets(in: app_path('Filament/'.ucfirst(self::PANEL).'/Widgets'),
+                for: 'App\\Filament\\'.ucfirst(self::PANEL).'\\Widgets')
             ->widgets([
                 // Add your home-page dashboard widgets here.
             ])

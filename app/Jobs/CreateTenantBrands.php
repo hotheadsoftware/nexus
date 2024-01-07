@@ -31,7 +31,7 @@ class CreateTenantBrands implements ShouldQueue
     {
         $panels = ColorHelper::getPanelNames()
             ->filter(function ($panel) {
-                return $panel !== 'admin';
+                return $panel !== 'account';
             });
 
         foreach ($panels as $panel) {
@@ -42,14 +42,12 @@ class CreateTenantBrands implements ShouldQueue
                 'name'   => $this->tenant->name.' '.ucfirst($panel),
                 'logo'   => null,
                 'colors' => [
-                    $panel => [
-                        'danger'  => ColorHelper::rgbToHex(Color::Red['500']),
-                        'primary' => ColorHelper::rgbToHex(Color::Amber['500']),
-                        'info'    => ColorHelper::rgbToHex(Color::Sky['500']),
-                        'success' => ColorHelper::rgbToHex(Color::Green['500']),
-                        'warning' => ColorHelper::rgbToHex(Color::Orange['500']),
-                        'gray'    => ColorHelper::rgbToHex(Color::Gray['500']),
-                    ],
+                    'danger'  => ColorHelper::rgbToHex(Color::Red['500']),
+                    'primary' => ColorHelper::rgbToHex(Color::Amber['500']),
+                    'info'    => ColorHelper::rgbToHex(Color::Sky['500']),
+                    'success' => ColorHelper::rgbToHex(Color::Green['500']),
+                    'warning' => ColorHelper::rgbToHex(Color::Orange['500']),
+                    'gray'    => ColorHelper::rgbToHex(Color::Gray['500']),
                 ],
                 'allow_registration' => true,
                 'headline'           => 'Welcome to '.$this->tenant->name.'\'s '.ucfirst($panel).' Panel',

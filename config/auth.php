@@ -31,6 +31,10 @@ return [
     | users are actually retrieved out of your database or other storage
     | mechanisms used by this application to persist your user's data.
     |
+    | Nexus is adopting a convention of "one guard per defined panel", which
+    | means that we define a distinct user type for each panel, allowing
+    | us to create a custom experience for each user type in our app.
+    |
     | Supported: "session"
     |
     */
@@ -40,7 +44,11 @@ return [
             'driver'   => 'session',
             'provider' => 'users',
         ],
-        'operator' => [
+        'account' => [
+            'driver'   => 'session',
+            'provider' => 'users',
+        ],
+        'operate' => [
             'driver'   => 'session',
             'provider' => 'operators',
         ],

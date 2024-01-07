@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Widgets\Admin;
+namespace App\Filament\Widgets\Account;
 
 use App\Models\Tenant;
 use Auth;
