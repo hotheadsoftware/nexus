@@ -21,6 +21,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Jeffgreco13\FilamentBreezy\BreezyCore;
 
 class AccountPanelProvider extends PanelProvider
 {
@@ -28,7 +29,6 @@ class AccountPanelProvider extends PanelProvider
 
     public function panel(Panel $panel): Panel
     {
-
         return $panel
             ->default()
             ->id(self::PANEL)
@@ -48,6 +48,11 @@ class AccountPanelProvider extends PanelProvider
             ->widgets([
                 CompanyList::class,
                 StatsOverview::class,
+            ])
+            ->plugins([
+                BreezyCore::make()
+                    ->myProfile(shouldRegisterNavigation: true)
+                    ->enableSanctumTokens(permissions: ['create', 'read', 'update', 'delete']),
             ])
             ->middleware([
                 EncryptCookies::class,
