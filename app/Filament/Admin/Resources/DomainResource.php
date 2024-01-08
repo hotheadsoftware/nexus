@@ -2,7 +2,7 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Resources\DomainResource\Pages;
+use App\Filament\Admin\Resources\DomainResource\Pages;
 use App\Models\Domain;
 use App\Models\Tenant;
 use Filament\Forms;
@@ -88,10 +88,6 @@ class DomainResource extends Resource
             ]);
     }
 
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery();
-    }
 
     public static function getRelations(): array
     {

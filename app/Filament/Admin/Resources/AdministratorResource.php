@@ -10,6 +10,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Hash;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * An administrator is a class of user which has access to the 'admin' Filament panel.
@@ -21,6 +22,11 @@ class AdministratorResource extends Resource
     protected static ?string $model = Administrator::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->can('delete administrators');
+    }
 
     public static function form(Form $form): Form
     {
