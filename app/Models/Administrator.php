@@ -20,6 +20,8 @@ class Administrator extends Authenticatable implements \OwenIt\Auditing\Contract
         HasRoles,
         Notifiable;
 
+    public $connection = 'central';
+
     public function canAccessPanel(Panel $panel): bool
     {
         return $panel->getId() === AdminPanelProvider::PANEL;

@@ -4,10 +4,12 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\AdministratorResource\Pages;
 use App\Models\Administrator;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Hash;
 
 /**
  * An administrator is a class of user which has access to the 'admin' Filament panel.
@@ -24,7 +26,17 @@ class AdministratorResource extends Resource
     {
         return $form
             ->schema([
-                //
+                TextInput::make('name')
+                    ->autofocus()
+                    ->required(),
+                TextInput::make('email')
+                    ->email()
+                    ->required(),
+                TextInput::make('password')
+                    ->password()
+                    ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                    ->dehydrated(fn ($state) => filled($state))
+                    ->required(fn (string $context): bool => $context === 'create')
             ]);
     }
 
@@ -32,8 +44,13 @@ class AdministratorResource extends Resource
     {
         return $table
             ->columns([
-                //
-            ])
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('email')
+                    ->searchable()
+                    ->sortable(),
+                ])
             ->filters([
                 //
             ])

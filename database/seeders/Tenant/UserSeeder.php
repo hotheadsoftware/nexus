@@ -20,9 +20,9 @@ class UserSeeder extends Seeder
          */
         if (app()->environment() === 'local') {
             Operator::create([
-                'name'              => config('app.app_plane.user.name'),
-                'email'             => config('app.app_plane.user.email'),
-                'password'          => Hash::make(config('app.app_plane.user.password')),
+                'name'              => config('panels.operate.user.name'),
+                'email'             => config('panels.operate.user.email'),
+                'password'          => Hash::make(config('panels.operate.user.password')),
                 'email_verified_at' => now(),
             ]);
         }
