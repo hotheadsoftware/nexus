@@ -30,7 +30,16 @@ if [[ "$(docker images -q laravel-setup:latest 2> /dev/null)" == "" ]]; then
 fi
 
 echo -e "\n${YELLOW}Setting up the environment...${NC}"
-docker run -it --rm -v "$(pwd):/app" -u "$(id -u):$(id -g)" laravel-setup:latest composer install --ignore-platform-reqs || error_exit "Error during Composer install."
+
+
+if ! docker volume ls | grep -q "composer-cache"; then
+    echo -e "${YELLOW}Creating 'composer-cache' volume...${NC}"
+    docker volume create composer-cache
+else
+    echo -e "${GREEN}'composer-cache' volume already exists.${NC}"
+fi
+
+docker run -it --rm -v "$(pwd):/app" -v "composer-cache:/root/.composer/cache" -u "$(id -u):$(id -g)" laravel-setup:latest composer install --ignore-platform-reqs || error_exit "Error during Composer install."
 
 if [ ! -f "./vendor/bin/sail" ]; then
     error_exit "Error: vendor/bin/sail not found. Please make sure you've run 'composer install'."
@@ -104,12 +113,6 @@ if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
 # Run Pint to fix code style issues
 ./vendor/bin/sail exec -T ./vendor/bin/pint
 
-# Check if Pint has made any changes
-if git status --porcelain | grep -qE '^[AM]+\s+.*\.(php)$'; then
-    echo -e "${RED}Pint has made changes to some PHP files. Please review and add them before committing.${NC}"
-    exit 1
-fi
-
 # Continue with the commit if no changes were made
 exit 0
 EOF
@@ -119,32 +122,62 @@ else
     echo "${GREEN}Skipping Pint Pre-Hook: We're Not In A Repository${NC}"
 fi
 
-echo -e "\n${YELLOW}If you'd like a better developer experience, you can install the following Bash aliases:${NC}\n"
+# Define a function to check if an alias exists
+alias_exists() {
+    grep -q "^alias $1=" ~/.bashrc
+}
 
-echo -e "${GREEN}|======================================================================================|${NC}"
-echo -e "${GREEN}| alias sail='.vendor/bin/sail'                                                        |${NC}"
-echo -e "${GREEN}| alias artisan='sail artisan'                                                         |${NC}"
-echo -e "${GREEN}| alias tinker='sail artisan tinker'                                                   |${NC}"
-echo -e "${GREEN}| alias composer='sail composer'                                                       |${NC}"
-echo -e "${GREEN}|======================================================================================|${NC}"
+# Prepare the list of aliases to potentially add
+declare -A aliases
+aliases[sail]='.vendor/bin/sail'
+aliases[artisan]='sail artisan'
+aliases[tinker]='sail artisan tinker'
+aliases[composer]='sail composer'
 
-echo -e "\n"
-# shellcheck disable=SC2162
-read -p "Would you like to install these aliases? (y/n): " user_input
+# Calculate the maximum length of the alias declarations
+max_length=0
+for key in "${!aliases[@]}"; do
+    declaration_length=${#key}+${#aliases[$key]}+11 # Length of 'alias ', '=', and single quotes
+    [[ $declaration_length -gt $max_length ]] && max_length=$declaration_length
+done
 
-# Case-insensitive comparison of first character & search for negative intent.
-# -- True: y, yes, yeah, yup, yo, yippie-kay-yay, etc.
-# -- False: "Yeah, no", "Yeah, that's a no from me, dawg.", "You realize I said no, right?"
+# Check for existing aliases and prepare the list of new aliases
+new_aliases=()
+for key in "${!aliases[@]}"; do
+    if ! alias_exists "$key"; then
+        alias_declaration="alias $key='${aliases[$key]}'"
+        new_aliases+=("$alias_declaration")
+    fi
+done
 
-if [[ "${user_input,,}" == y* && ! "${user_input,,}" == *no* ]]; then
-    cat <<EOF >> ~/.bashrc
-alias sail='.vendor/bin/sail'
-alias artisan='sail artisan'
-alias tinker='sail artisan tinker'
-alias composer='sail composer'
-EOF
-    echo -e "\nAliases have been added to your ~/.bashrc. Please restart your terminal or use the following command: source ~/.bashrc"
+# Only proceed if there are new aliases to add
+if [ ${#new_aliases[@]} -ne 0 ]; then
+    echo -e "\nIf you'd like a better developer experience, you can install the following Bash aliases:\n"
+
+    echo -e "${GREEN}"
+    echo -e "|=======================================|"
+    for alias_declaration in "${new_aliases[@]}"; do
+        # Pad each line to align the ending pipe
+        printf "| %-$(($max_length + 1))s |\n" "$alias_declaration"
+    done
+    echo -e "|=======================================|"
+    echo -e "${NC}"
+
+    echo -e "${YELLOW}"
+    read -p "Would you like to install these aliases? (y/n): " user_input
+    echo -e "${NC}"
+
+
+    if [[ "${user_input,,}" == y* && ! "${user_input,,}" == *no* ]]; then
+        for alias_declaration in "${new_aliases[@]}"; do
+            echo "$alias_declaration" >> ~/.bashrc
+        done
+        echo -e "\nAliases have been added to your ~/.bashrc. Please restart your terminal or use the following command: source ~/.bashrc"
+    else
+        echo -e "\nSetup completed successfully! Try .vendor/bin/sail npm run dev to get started!"
+        exit 0
+    fi
 else
-    echo -e "\n${GREEN}Setup completed successfully! Try .vendor/bin/sail npm run dev to get started!${NC}"
+    echo -e "\nNo new aliases to install. Setup completed successfully!"
     exit 0
 fi
