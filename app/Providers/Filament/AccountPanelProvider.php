@@ -5,7 +5,6 @@ namespace App\Providers\Filament;
 use App\Filament\Overrides\LoginNotFound;
 use App\Filament\Widgets\Account\CompanyList;
 use App\Filament\Widgets\Account\StatsOverview;
-use App\Helpers\DomainHelper;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -34,7 +33,10 @@ class AccountPanelProvider extends PanelProvider
             ->id(self::PANEL)
             ->path(self::PANEL)
             ->spa()
-            ->login(DomainHelper::inTenantContext() ? LoginNotFound::class : Login::class)
+            ->login(! in_array(request()->getHost(), config('tenancy.central_domains'))
+                ? LoginNotFound::class
+                : Login::class
+            )
             ->registration()
             ->colors([
                 'primary' => Color::Amber,
