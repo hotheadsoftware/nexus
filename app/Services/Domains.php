@@ -2,9 +2,6 @@
 
 namespace App\Services;
 
-
-use Illuminate\Http\Request;
-
 /**
  * Class Domain (Helper)
  *
@@ -17,7 +14,6 @@ use Illuminate\Http\Request;
  */
 class Domains
 {
-
     public function addToNameserver()
     {
         // TODO - route53, cloudflare, etc. code here
