@@ -24,6 +24,16 @@ class TenantResource extends Resource
 
     protected static ?string $slug = 'instances';
 
+    public static function canViewAny(): bool
+    {
+        return true;
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
     public static function form(Form $form): Form
     {
         return $form
