@@ -10,8 +10,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 
 class BrandResource extends Resource
 {
@@ -30,8 +28,6 @@ class BrandResource extends Resource
     {
         return true;
     }
-
-
 
     public static function form(Form $form): Form
     {

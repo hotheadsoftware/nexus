@@ -34,7 +34,7 @@ class AdminPanelProvider extends PanelProvider
             ->authGuard(self::PANEL)
             ->colors([
                 'primary' => Color::Stone,
-                'gray' => Color::Emerald,
+                'gray'    => Color::Emerald,
             ])
             ->discoverResources(in: app_path('Filament/'.ucfirst(self::PANEL).'/Resources'),
                 for: 'App\\Filament\\'.ucfirst(self::PANEL).'\\Resources')
