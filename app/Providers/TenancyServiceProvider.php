@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Helpers\DomainHelper;
 use App\Jobs\CreateTenantBrands;
 use App\Jobs\CreateTenantDomain;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
@@ -170,7 +170,7 @@ class TenancyServiceProvider extends ServiceProvider
 
     private function prepareLivewireForTenancy(): void
     {
-        if (DomainHelper::inTenantContext()) {
+        if (Request::inTenantContext()) {
 
             // This initializer will throw an exception if the tenant cannot be identified.
             // If we can't identify the tenant, it would be preferable to return a 404

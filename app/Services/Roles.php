@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Services;
 
-class RoleHelper
+class Roles
 {
     const ELEVATED = [
         'admin',

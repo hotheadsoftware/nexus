@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Services;
 
 use Exception;
 use Filament\Support\Colors\Color;
@@ -14,9 +14,9 @@ use Illuminate\Support\Str;
  * This class is a support class offering color validation and retrieval for Filament Panel
  * configuration. It is used by the Brand model to validate color configurations.
  */
-class ColorHelper
+class Colors
 {
-    public static function getShades(string $name): ?array
+    public function getShades(string $name): ?array
     {
         if ($name === '') {
             return null;
@@ -40,7 +40,7 @@ class ColorHelper
     /**
      * @throws Exception
      */
-    public static function rgbToHex($r, $g = null, $b = null): string
+    public function rgbToHex($r, $g = null, $b = null): string
     {
         if (is_string($r) && Str::contains($r, ',')) {
             $process = explode(',', $r);
@@ -65,7 +65,7 @@ class ColorHelper
     /**
      * @throws Exception
      */
-    public static function validateRgb($r, $g, $b): bool
+    public function validateRgb($r, $g, $b): bool
     {
         foreach ([$r, $g, $b] as $rgb) {
             if (! is_numeric($rgb)) {
@@ -79,7 +79,7 @@ class ColorHelper
         return true;
     }
 
-    public static function hexColor(string $name): ?string
+    public function hexColor(string $name): ?string
     {
         $color = ltrim($name, '#');
 
@@ -107,12 +107,12 @@ class ColorHelper
      *   ];
      * })->toArray();
      */
-    public static function getPanelColors(): array
+    public function getPanelColors(): array
     {
         return (new ColorManager)->getColors();
     }
 
-    public static function getColorConditions(): array
+    public function getColorConditions(): array
     {
         return array_keys(static::getPanelColors());
     }
@@ -122,7 +122,7 @@ class ColorHelper
      * It pulls a list of words extracted as "the first word of each file found", which should
      * correspond to the panel name.
      */
-    public static function getPanelNames(): Collection
+    public function getPanelNames(): Collection
     {
         $directoryPath = app_path('Providers/Filament');
         $firstWords    = collect([]);

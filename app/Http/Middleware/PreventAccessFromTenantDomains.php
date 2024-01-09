@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use App\Helpers\DomainHelper;
 use Closure;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route as Router;
 
 /**
@@ -34,7 +33,7 @@ class PreventAccessFromTenantDomains
             return $next($request);
         }
 
-        return DomainHelper::inTenantContext()
+        return $request->inTenantContext()
             ? $this->central404->__invoke($request)
             : $next($request);
     }
