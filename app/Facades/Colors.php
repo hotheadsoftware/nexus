@@ -8,6 +8,6 @@ class Colors extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return 'colors';
+        return 'nexus.colors';
     }
 }

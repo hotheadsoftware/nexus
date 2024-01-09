@@ -8,6 +8,6 @@ class Domains extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return 'domains';
+        return 'nexus.domains';
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Facades\Environment;
 use App\Jobs\CreateTenantBrands;
 use App\Jobs\CreateTenantDomain;
 use Illuminate\Contracts\Http\Kernel;
@@ -30,8 +31,8 @@ class TenancyServiceProvider extends ServiceProvider
     {
         return [
             // Tenant events
-            Events\CreatingTenant::class => [],
-            Events\TenantCreated::class  => [
+            Events\CreatingTenant::class      => [],
+            Events\TenantCreated::class       => [
                 JobPipeline::make([
                     Jobs\CreateDatabase::class,
                     Jobs\MigrateDatabase::class,
@@ -46,12 +47,12 @@ class TenancyServiceProvider extends ServiceProvider
                 })->shouldBeQueued(false),
                 // `false` by default, but you probably want to make this `true` for production.
             ],
-            Events\SavingTenant::class   => [],
-            Events\TenantSaved::class    => [],
-            Events\UpdatingTenant::class => [],
-            Events\TenantUpdated::class  => [],
-            Events\DeletingTenant::class => [],
-            Events\TenantDeleted::class  => [
+            Events\SavingTenant::class        => [],
+            Events\TenantSaved::class         => [],
+            Events\UpdatingTenant::class      => [],
+            Events\TenantUpdated::class       => [],
+            Events\DeletingTenant::class      => [],
+            Events\TenantDeleted::class       => [
                 JobPipeline::make([
                     Jobs\DeleteDatabase::class,
                 ])->send(function (Events\TenantDeleted $event) {
@@ -61,21 +62,21 @@ class TenancyServiceProvider extends ServiceProvider
             ],
 
             // Domain events
-            Events\CreatingDomain::class => [],
-            Events\DomainCreated::class  => [],
-            Events\SavingDomain::class   => [],
-            Events\DomainSaved::class    => [],
-            Events\UpdatingDomain::class => [],
-            Events\DomainUpdated::class  => [],
-            Events\DeletingDomain::class => [],
-            Events\DomainDeleted::class  => [],
+            Events\CreatingDomain::class      => [],
+            Events\DomainCreated::class       => [],
+            Events\SavingDomain::class        => [],
+            Events\DomainSaved::class         => [],
+            Events\UpdatingDomain::class      => [],
+            Events\DomainUpdated::class       => [],
+            Events\DeletingDomain::class      => [],
+            Events\DomainDeleted::class       => [],
 
             // Database events
-            Events\DatabaseCreated::class    => [],
-            Events\DatabaseMigrated::class   => [],
-            Events\DatabaseSeeded::class     => [],
-            Events\DatabaseRolledBack::class => [],
-            Events\DatabaseDeleted::class    => [],
+            Events\DatabaseCreated::class     => [],
+            Events\DatabaseMigrated::class    => [],
+            Events\DatabaseSeeded::class      => [],
+            Events\DatabaseRolledBack::class  => [],
+            Events\DatabaseDeleted::class     => [],
 
             // Tenancy events
             Events\InitializingTenancy::class => [],
@@ -93,19 +94,19 @@ class TenancyServiceProvider extends ServiceProvider
                 },
             ],
 
-            Events\BootstrappingTenancy::class => [],
-            Events\TenancyBootstrapped::class  => [
+            Events\BootstrappingTenancy::class                   => [],
+            Events\TenancyBootstrapped::class                    => [
                 // Configure Spatie/Permission - Enable Tenant Context
                 function (Events\TenancyBootstrapped $event) {
                     $permissionRegistrar           = app(PermissionRegistrar::class);
                     $permissionRegistrar->cacheKey = 'spatie.permission.cache.tenant.'.$event->tenancy->tenant->getTenantKey();
                 },
             ],
-            Events\RevertingToCentralContext::class => [],
-            Events\RevertedToCentralContext::class  => [],
+            Events\RevertingToCentralContext::class              => [],
+            Events\RevertedToCentralContext::class               => [],
 
             // Resource syncing
-            Events\SyncedResourceSaved::class => [
+            Events\SyncedResourceSaved::class                    => [
                 Listeners\UpdateSyncedResource::class,
             ],
 
@@ -170,7 +171,7 @@ class TenancyServiceProvider extends ServiceProvider
 
     private function prepareLivewireForTenancy(): void
     {
-        if (Request::inTenantContext()) {
+        if (! in_array(app()->request->getHost(), config('tenancy.central_domains'), true)) {
 
             // This initializer will throw an exception if the tenant cannot be identified.
             // If we can't identify the tenant, it would be preferable to return a 404

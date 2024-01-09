@@ -8,6 +8,6 @@ class Roles extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return 'roles';
+        return 'nexus.roles';
     }
 }
