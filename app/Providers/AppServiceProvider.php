@@ -71,5 +71,4 @@ class AppServiceProvider extends ServiceProvider
             return new Roles();
         });
     }
-
 }

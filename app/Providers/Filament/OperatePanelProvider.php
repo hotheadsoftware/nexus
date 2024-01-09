@@ -2,7 +2,7 @@
 
 namespace App\Providers\Filament;
 
-use App\Helpers\ColorHelper;
+use App\Services\Colors;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -37,12 +37,12 @@ class OperatePanelProvider extends PanelProvider
                     ->getPanel(self::PANEL)
                     ->registration($brand->allow_registration ?? false)
                     ->colors([
-                        'danger'  => ColorHelper::getShades($brand->colors['danger'] ?? '')  ?? Color::Red,
-                        'primary' => ColorHelper::getShades($brand->colors['primary'] ?? '') ?? Color::Stone,
-                        'info'    => ColorHelper::getShades($brand->colors['info'] ?? '')    ?? Color::Blue,
-                        'success' => ColorHelper::getShades($brand->colors['success'] ?? '') ?? Color::Green,
-                        'warning' => ColorHelper::getShades($brand->colors['warning'] ?? '') ?? Color::Orange,
-                        'gray'    => ColorHelper::getShades($brand->colors['gray'] ?? '')    ?? Color::Green,
+                        'danger'  => Colors::getShades($brand->colors['danger'] ?? '')  ?? Color::Red,
+                        'primary' => Colors::getShades($brand->colors['primary'] ?? '') ?? Color::Stone,
+                        'info'    => Colors::getShades($brand->colors['info'] ?? '')    ?? Color::Blue,
+                        'success' => Colors::getShades($brand->colors['success'] ?? '') ?? Color::Green,
+                        'warning' => Colors::getShades($brand->colors['warning'] ?? '') ?? Color::Orange,
+                        'gray'    => Colors::getShades($brand->colors['gray'] ?? '')    ?? Color::Green,
                     ])
                     ->brandLogo(fn () => view('filament.logo.'.self::PANEL))
                     ->boot();

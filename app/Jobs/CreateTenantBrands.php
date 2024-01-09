@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Helpers\ColorHelper;
 use App\Models\Brand;
+use App\Services\Colors;
 use Exception;
 use Filament\Support\Colors\Color;
 use Illuminate\Bus\Queueable;
@@ -29,7 +29,7 @@ class CreateTenantBrands implements ShouldQueue
      */
     public function handle(): void
     {
-        $panels = ColorHelper::getPanelNames()
+        $panels = Colors::getPanelNames()
             ->filter(function ($panel) {
                 return $panel !== 'account';
             });
@@ -42,12 +42,12 @@ class CreateTenantBrands implements ShouldQueue
                 'name'   => $this->tenant->name.' '.ucfirst($panel),
                 'logo'   => null,
                 'colors' => [
-                    'danger'  => ColorHelper::rgbToHex(Color::Red['500']),
-                    'primary' => ColorHelper::rgbToHex(Color::Amber['500']),
-                    'info'    => ColorHelper::rgbToHex(Color::Sky['500']),
-                    'success' => ColorHelper::rgbToHex(Color::Green['500']),
-                    'warning' => ColorHelper::rgbToHex(Color::Orange['500']),
-                    'gray'    => ColorHelper::rgbToHex(Color::Gray['500']),
+                    'danger'  => Colors::rgbToHex(Color::Red['500']),
+                    'primary' => Colors::rgbToHex(Color::Amber['500']),
+                    'info'    => Colors::rgbToHex(Color::Sky['500']),
+                    'success' => Colors::rgbToHex(Color::Green['500']),
+                    'warning' => Colors::rgbToHex(Color::Orange['500']),
+                    'gray'    => Colors::rgbToHex(Color::Gray['500']),
                 ],
                 'allow_registration' => true,
                 'headline'           => 'Welcome to '.$this->tenant->name.'\'s '.ucfirst($panel).' Panel',
