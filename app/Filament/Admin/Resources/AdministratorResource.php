@@ -42,7 +42,7 @@ class AdministratorResource extends Resource
                     ->password()
                     ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                     ->dehydrated(fn ($state) => filled($state))
-                    ->required(fn (string $context): bool => $context === 'create')
+                    ->required(fn (string $context): bool => $context === 'create'),
             ]);
     }
 
@@ -56,7 +56,7 @@ class AdministratorResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->searchable()
                     ->sortable(),
-                ])
+            ])
             ->filters([
                 //
             ])
