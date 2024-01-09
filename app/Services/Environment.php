@@ -24,23 +24,23 @@ class Environment
     }
 
     public const ENVIRONMENT_NAMES = [
-        'local'       => [
+        'local' => [
             'local',
             'loc',
         ],
-        'production'  => [
+        'production' => [
             'production',
             'prod',
             'main',
             'prd',
             'master',
         ],
-        'staging'     => [
+        'staging' => [
             'staging',
             'stage',
             'stg',
         ],
-        'testing'     => [
+        'testing' => [
             'testing',
             'test',
             'tst',
@@ -63,8 +63,8 @@ class Environment
 
         return match ($name) {
             'isCentral' => in_array($this->request->getHost(), config('tenancy.central_domains'), true),
-            'isTenant' => ! in_array($this->request->getHost(), config('tenancy.central_domains'), true),
-            default => throw new BadMethodCallException("Method {$name} does not exist"),
+            'isTenant'  => ! in_array($this->request->getHost(), config('tenancy.central_domains'), true),
+            default     => throw new BadMethodCallException("Method {$name} does not exist"),
         };
     }
 }

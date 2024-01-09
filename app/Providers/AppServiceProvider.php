@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use App\Services\Environment;
 use App\Services\Colors;
 use App\Services\Domains;
+use App\Services\Environment;
 use App\Services\Roles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
