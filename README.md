@@ -12,10 +12,6 @@ a scaffold for micro-Saas applications.
   - [ ] What this is and why it exists
   - [ ] Multiple User Types / Access Levels or Patterns
   - [ ] Creating a new panel
-- [ ] Tenant APIs
-  - [ ] UI to manage API Tokens
-  - [ ] Figure out Tenant API Access Scoped to a Panel
-    - Probably involves middleware Config override for `sanctum.guard`
 
     
 ## Architecture
@@ -61,10 +57,7 @@ and forecasting and some level of application analytics around usage of the plat
 - [x] [Model Change Audits](https://laravel-auditing.com)
 - [x] [Model Tagging](https://spatie.be/docs/laravel-tags/v4/introduction)
 - [x] [User Roles & Permissions](https://spatie.be/docs/laravel-permission/v6/introduction)
-- [ ] Panel-Scoped Tenant-Aware REST API Routes
-  - [x] Routes Stubbed
-  - [ ] Middleware to Scope Auth
-  - [ ] Authentication
+- [x] Panel-Scoped Tenant-Aware REST API Routes
 - [ ] Custom Artisan Helper Commands
 - [ ] Stretch Goal -- IAC (Infrastructure as Code) with Terraform
 - [ ] Stretch Goal -- CI/CD with GitHub Actions
