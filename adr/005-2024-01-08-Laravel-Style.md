@@ -30,7 +30,7 @@ $foo = [
 
 // Nexus Style
 $foo = [
-    'thing' => 'baz',
+    'thing'     => 'baz',
     'something' => 'quux',
 ];
 ```
