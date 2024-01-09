@@ -53,7 +53,7 @@ class AccountPanelProvider extends PanelProvider
             ])
             ->plugins([
                 BreezyCore::make()
-                    ->myProfile(shouldRegisterNavigation: true)
+                    ->myProfile(shouldRegisterNavigation: false)
                     ->enableSanctumTokens(permissions: ['create', 'read', 'update', 'delete']),
             ])
             ->middleware([
