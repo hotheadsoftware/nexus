@@ -57,7 +57,7 @@ class TenancyServiceProvider extends ServiceProvider
                     return $event->tenant;
                 })->shouldBeQueued(false),
             ],
-            Events\TenantDeleted::class  => [
+            Events\TenantDeleted::class => [
                 JobPipeline::make([
                     Jobs\DeleteDatabase::class,
                 ])->send(function (Events\TenantDeleted $event) {
