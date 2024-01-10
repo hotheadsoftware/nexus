@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources;
 
+use App\Facades\Colors;
+use App\Features\CustomBranding;
 use App\Filament\Resources\BrandResource\Pages;
 use App\Models\Brand;
-use App\Services\Colors;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Pennant\Feature;
 
 class BrandResource extends Resource
 {
@@ -51,26 +53,55 @@ class BrandResource extends Resource
 
     public static function form(Form $form): Form
     {
+        return $form->schema(array_merge(
+            static::getDetailsSection(),
+            static::getColorSection(),
+        ));
+    }
+
+    public static function getDetailsSection(): array
+    {
+        $details = [
+            'name'        => 'Brand Details',
+            'description' => 'Select your colors & branding for this panel.',
+            'schema'      => [
+                Forms\Components\Toggle::make('allow_registration')->autofocus()->required(),
+                Forms\Components\TextInput::make('name')->autofocus()->required(),
+                Forms\Components\TextInput::make('headline')->autofocus()->required(),
+                Forms\Components\TextInput::make('panel')->autofocus()->required(),
+            ],
+        ];
+
+        if (Feature::active(CustomBranding::class)) {
+            $details['schema'][] = Forms\Components\SpatieMediaLibraryFileUpload::make('logo')->collection('logo')->autofocus()->required();
+        }
+
+        return [
+            Forms\Components\Section::make($details['name'])
+                ->description($details['description'])
+                ->schema($details['schema']),
+        ];
+    }
+
+    public static function getColorSection(): array
+    {
+        if (! Feature::active(CustomBranding::class)) {
+            return [];
+        }
+
         $conditions    = Colors::getPanelColors();
         $color_pickers = [];
         foreach ($conditions as $condition => $color) {
-            $color_pickers[] = Forms\Components\ColorPicker::make("colors.$condition")->hexColor()->live()->default($color['500']);
+            $color_pickers[] = Forms\Components\ColorPicker::make("colors.$condition")
+                ->hexColor()
+                ->live()
+                ->default($color['500']);
         }
 
-        return $form
-            ->schema([
-                Forms\Components\Section::make('Brand Details')
-                    ->description('Select your colors & branding for this panel.')
-                    ->schema([
-                        Forms\Components\Toggle::make('allow_registration')->autofocus()->required(),
-                        Forms\Components\TextInput::make('name')->autofocus()->required(),
-                        Forms\Components\TextInput::make('headline')->autofocus()->required(),
-                        Forms\Components\TextInput::make('panel')->autofocus()->required(),
-                        Forms\Components\SpatieMediaLibraryFileUpload::make('logo')->collection('logo')->autofocus()->required(),
-                    ]),
-                Forms\Components\Section::make('Brand Colors')
-                    ->schema($color_pickers)->columns(2),
-            ]);
+        return [
+            Forms\Components\Section::make('Brand Colors')->schema($color_pickers)->columns(2),
+        ];
+
     }
 
     public static function table(Table $table): Table
