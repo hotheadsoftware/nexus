@@ -6,6 +6,7 @@ namespace App\Providers;
 
 use App\Jobs\CreateTenantBrands;
 use App\Jobs\CreateTenantDomain;
+use App\Jobs\DeleteTenantBrands;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
@@ -49,7 +50,13 @@ class TenancyServiceProvider extends ServiceProvider
             Events\TenantSaved::class    => [],
             Events\UpdatingTenant::class => [],
             Events\TenantUpdated::class  => [],
-            Events\DeletingTenant::class => [],
+            Events\DeletingTenant::class => [
+                JobPipeline::make([
+                    DeleteTenantBrands::class,
+                ])->send(function (Events\DeletingTenant $event) {
+                    return $event->tenant;
+                })->shouldBeQueued(false),
+            ],
             Events\TenantDeleted::class  => [
                 JobPipeline::make([
                     Jobs\DeleteDatabase::class,
