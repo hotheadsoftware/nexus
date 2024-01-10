@@ -2,7 +2,7 @@
 
 namespace App\Providers\Filament;
 
-use App\Services\Colors;
+use App\Facades\Colors;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
