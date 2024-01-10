@@ -36,9 +36,9 @@ class CreateTenantBrands implements ShouldQueue
                 'tenant_id' => $this->tenant->id,
                 'panel'     => $panel,
             ], [
-                'name'               => $this->tenant->name.' '.ucfirst($panel),
-                'logo'               => null,
-                'colors'             => [
+                'name'   => $this->tenant->name.' '.ucfirst($panel),
+                'logo'   => null,
+                'colors' => [
                     'danger'  => Colors::rgbToHex(Color::Red['500']),
                     'primary' => Colors::rgbToHex(Color::Amber['500']),
                     'info'    => Colors::rgbToHex(Color::Sky['500']),
