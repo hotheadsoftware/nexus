@@ -17,6 +17,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -87,6 +88,11 @@ class OperatePanelProvider extends PanelProvider
                 for: 'App\\Filament\\'.ucfirst(self::PANEL).'\\Pages')
             ->pages([
                 Pages\Dashboard::class,
+            ])
+            ->plugins([
+                BreezyCore::make()
+                    ->myProfile(shouldRegisterNavigation: false)
+                    ->enableSanctumTokens(permissions: ['create', 'read', 'update', 'delete']),
             ])
             ->discoverWidgets(in: app_path('Filament/'.ucfirst(self::PANEL).'/Widgets'),
                 for: 'App\\Filament\\'.ucfirst(self::PANEL).'\\Widgets')
