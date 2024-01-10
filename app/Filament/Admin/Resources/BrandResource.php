@@ -2,8 +2,8 @@
 
 namespace App\Filament\Admin\Resources;
 
+use App\Facades\Colors;
 use App\Filament\Admin\Resources\BrandResource\Pages;
-use App\Helpers\ColorHelper;
 use App\Models\Brand;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -36,8 +36,9 @@ class BrandResource extends Resource
 
     public static function form(Form $form): Form
     {
-        $conditions    = ColorHelper::getPanelColors();
+        $conditions    = Colors::getPanelColors();
         $color_pickers = [];
+
         foreach ($conditions as $condition => $color) {
             $color_pickers[] = Forms\Components\ColorPicker::make("colors.$condition")->hexColor()->live()->default($color['500']);
         }

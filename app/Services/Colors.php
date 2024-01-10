@@ -107,14 +107,14 @@ class Colors
      *   ];
      * })->toArray();
      */
-    public function getPanelColors(): array
+    public function getPanelColors(): Collection
     {
-        return (new ColorManager)->getColors();
+        return collect((new ColorManager)->getColors());
     }
 
-    public function getColorConditions(): array
+    public function getColorConditions(): Collection
     {
-        return array_keys(static::getPanelColors());
+        return Collect(array_keys(static::getPanelColors()->toArray()));
     }
 
     /**

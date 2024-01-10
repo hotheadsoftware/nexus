@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Filament\Admin\Resources\TenantResource\Pages;
 use App\Filament\Admin\Resources\TenantResource\RelationManagers\DomainsRelationManager;
 use App\Models\Tenant;
+use App\Models\User;
 use Exception;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -39,6 +40,9 @@ class TenantResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')->autofocus()->required(),
+                Forms\Components\Select::make('user_id')->options(
+                    User::all()->pluck('name', 'id')->toArray()
+                )->required(),
             ]);
     }
 

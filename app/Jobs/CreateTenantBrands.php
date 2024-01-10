@@ -2,9 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Facades\Colors;
 use App\Models\Brand;
-use App\Services\Colors;
-use Exception;
 use Filament\Support\Colors\Color;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -24,14 +23,12 @@ class CreateTenantBrands implements ShouldQueue
         $this->tenant = $tenant;
     }
 
-    /**
-     * @throws Exception
-     */
     public function handle(): void
     {
         $panels = Colors::getPanelNames()
             ->filter(function ($panel) {
-                return $panel !== 'account';
+                // Users only see and can brand the tenant-context panels.
+                return ! in_array($panel, ['admin', 'account']);
             });
 
         foreach ($panels as $panel) {
@@ -39,9 +36,9 @@ class CreateTenantBrands implements ShouldQueue
                 'tenant_id' => $this->tenant->id,
                 'panel'     => $panel,
             ], [
-                'name'   => $this->tenant->name.' '.ucfirst($panel),
-                'logo'   => null,
-                'colors' => [
+                'name'               => $this->tenant->name.' '.ucfirst($panel),
+                'logo'               => null,
+                'colors'             => [
                     'danger'  => Colors::rgbToHex(Color::Red['500']),
                     'primary' => Colors::rgbToHex(Color::Amber['500']),
                     'info'    => Colors::rgbToHex(Color::Sky['500']),
@@ -50,7 +47,7 @@ class CreateTenantBrands implements ShouldQueue
                     'gray'    => Colors::rgbToHex(Color::Gray['500']),
                 ],
                 'allow_registration' => true,
-                'headline'           => 'Welcome to '.$this->tenant->name.'\'s '.ucfirst($panel).' Panel',
+                'headline'           => 'Customize Your '.ucfirst($panel).' Panel in the Brands section.',
             ]);
         }
     }

@@ -10,6 +10,11 @@ class EditBrand extends EditRecord
 {
     protected static string $resource = BrandResource::class;
 
+    protected function getRedirectUrl(): ?string
+    {
+        return url(route('filament.admin.pages.dashboard'));
+    }
+
     protected function getHeaderActions(): array
     {
         return [
