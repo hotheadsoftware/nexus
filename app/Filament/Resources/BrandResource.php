@@ -73,7 +73,7 @@ class BrandResource extends Resource
         ];
 
         if (Feature::active(CustomBranding::class)) {
-            $details['schema'][] = Forms\Components\SpatieMediaLibraryFileUpload::make('logo')->collection('logo')->autofocus()->required();
+            $details['schema'][] = Forms\Components\SpatieMediaLibraryFileUpload::make('logo')->collection('logo')->autofocus();
         }
 
         return [
