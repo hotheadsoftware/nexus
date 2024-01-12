@@ -31,28 +31,7 @@ class OperatePanelProvider extends PanelProvider
         parent::register();
 
         $this->app->afterResolving(DatabaseTenancyBootstrapper::class, function () {
-            $tenant = tenant();
-            $brand  = $tenant->brands->where('panel', self::PANEL)->first();
-            if ($brand) {
-                $this->app
-                    ->get('filament')
-                    ->getPanel(self::PANEL)
-                    ->registration($brand->allow_registration ?? false)
-                    ->colors([
-                        'danger'  => Colors::getShades($brand->colors['danger'] ?? '')  ?? Color::Red,
-                        'primary' => Colors::getShades($brand->colors['primary'] ?? '') ?? Color::Stone,
-                        'info'    => Colors::getShades($brand->colors['info'] ?? '')    ?? Color::Blue,
-                        'success' => Colors::getShades($brand->colors['success'] ?? '') ?? Color::Green,
-                        'warning' => Colors::getShades($brand->colors['warning'] ?? '') ?? Color::Orange,
-                        'gray'    => Colors::getShades($brand->colors['gray'] ?? '')    ?? Color::Green,
-                    ])
-                    ->brandLogo(fn () => view('filament.logo.tenant', [
-                        'tenant' => $tenant,
-                        'brand'  => $brand,
-                    ])
-                    )
-                    ->boot();
-            }
+            tenant()?->brands->where('panel', self::PANEL)?->first()?->applyToPanel(self::PANEL, tenant());
         });
     }
 

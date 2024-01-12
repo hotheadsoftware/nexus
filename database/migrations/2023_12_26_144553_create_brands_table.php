@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('brands', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('tenant_id')->constrained();
+            $table->foreignUuid('tenant_id')->index()->constrained();
             $table->string('name');
             $table->string('panel');
             $table->string('logo')->nullable();
@@ -19,6 +19,10 @@ return new class extends Migration
             $table->string('headline')->nullable();
             $table->timestamps();
             $table->softDeletes();
+
+            // A tenant should have exactly one brand per panel.
+            // We can't enforce existence, but we can enforce uniqueness.
+            $table->unique(['tenant_id', 'panel']);
         });
     }
 

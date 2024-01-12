@@ -1,8 +1,12 @@
 # Nexus: Saas Launchpad
 
+<<<<<<< Updated upstream
 ![image](https://github.com/hotheadsoftware/nexus/assets/14931610/43558c0b-8e72-4595-b7dd-cd45b48a2cbf)
 
 
+=======
+![img_4.png](img_4.png)
+>>>>>>> Stashed changes
 
 ## Documentation
 
@@ -15,15 +19,6 @@ This will help you stand up a local environment and get started build your next 
 This is a Laravel 10+ project that incorporates numerous components with the aim of providing 
 a scaffold for micro-Saas applications.
 
-## TOP OPEN ISSUES
-
-- [ ] Documentation
-  - [ ] Docusaurus or Something Else?
-  - [ ] What this is and why it exists
-  - [ ] Multiple User Types / Access Levels or Patterns
-  - [ ] Creating a new panel
-
-    
 ## Architecture
 
 Summary: Laravel 10 + Filament v3 + Stancl/Tenancy
@@ -142,5 +137,7 @@ path. (The tenancy package can do this automatically, but it introduces
 some undesirable behavior with Filament assets, so I've opted to do it
 manually.)
 
+## Contributing
 
+All contributions are welcome! Please see the [Contributing Guide](CONTRIBUTING.md) for more details.
 
