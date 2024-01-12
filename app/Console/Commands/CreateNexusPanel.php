@@ -37,7 +37,8 @@ class CreateNexusPanel extends Command
         $filePath = 'vendor/filament/support/stubs/PanelProvider.stub';
 
         if (! File::exists($filePath)) {
-            $this->error("File not found!");
+            $this->error('File not found!');
+
             return;
         }
 
@@ -61,7 +62,7 @@ class CreateNexusPanel extends Command
 
         if (! Str::contains($content, 'register()')) {
 
-            $content     = str_replace("PanelProvider\n{\n",
+            $content = str_replace("PanelProvider\n{\n",
                 "PanelProvider\n{\n".
                 "{$fourSpaces}public const PANEL = '{{ id }}';\n\n".
                 "{$fourSpaces}public function register(): void\n".
@@ -78,18 +79,18 @@ class CreateNexusPanel extends Command
             "->path('{{ id }}')" => '->path(self::PANEL)',
         ];
 
-        foreach($replace_methods as $old => $new) {
+        foreach ($replace_methods as $old => $new) {
             $content = str_replace($old, $new, $content);
         }
 
         $new_methods = [
-            '->spa()'              => '->spa()',
-            '->login()'            => '->login()',
-            '->registration()'     => '->registration()',
-            '->authGuard'          => '->authGuard(self::PANEL)',
+            '->spa()'          => '->spa()',
+            '->login()'        => '->login()',
+            '->registration()' => '->registration()',
+            '->authGuard'      => '->authGuard(self::PANEL)',
         ];
 
-        foreach($new_methods as $old => $new) {
+        foreach ($new_methods as $old => $new) {
             if (! Str::contains($content, $old)) {
                 $content = str_replace("->path(self::PANEL)\n", "->path(self::PANEL)\n$fourSpaces$eightSpaces$new\n", $content);
             }
@@ -108,7 +109,7 @@ class CreateNexusPanel extends Command
 
         File::put($filePath, $content);
 
-        $this->info("Rewriting Filament Stub: PanelProvider.stub");
+        $this->info('Rewriting Filament Stub: PanelProvider.stub');
 
         $this->call('make:filament-panel', [
             'id' => $this->ask('What is the ID?'),
