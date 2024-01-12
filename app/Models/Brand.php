@@ -37,8 +37,6 @@ class Brand extends Model implements HasMedia
     }
 
     /**
-     * @param  string  $panelName
-     * @param  Tenant  $tenant
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      *
@@ -51,14 +49,14 @@ class Brand extends Model implements HasMedia
             ->getPanel($panelName)
             ->registration($this->allow_registration ?? false)
             ->colors([
-                'danger'  => Colors::getShades($this->colors['danger'] ?? '') ?? Color::Red,
+                'danger'  => Colors::getShades($this->colors['danger'] ?? '')  ?? Color::Red,
                 'primary' => Colors::getShades($this->colors['primary'] ?? '') ?? Color::Stone,
-                'info'    => Colors::getShades($this->colors['info'] ?? '') ?? Color::Blue,
+                'info'    => Colors::getShades($this->colors['info'] ?? '')    ?? Color::Blue,
                 'success' => Colors::getShades($this->colors['success'] ?? '') ?? Color::Green,
                 'warning' => Colors::getShades($this->colors['warning'] ?? '') ?? Color::Orange,
-                'gray'    => Colors::getShades($this->colors['gray'] ?? '') ?? Color::Green,
+                'gray'    => Colors::getShades($this->colors['gray'] ?? '')    ?? Color::Green,
             ])
-            ->brandLogo(fn() => view('filament.logo.tenant', [
+            ->brandLogo(fn () => view('filament.logo.tenant', [
                 'brand'  => $this,
                 'tenant' => $tenant,
             ])
