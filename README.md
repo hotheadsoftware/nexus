@@ -1,6 +1,7 @@
 # Nexus: Saas Launchpad
 
-![img_3.png](img_3.png)
+![image](https://github.com/hotheadsoftware/nexus/assets/14931610/43558c0b-8e72-4595-b7dd-cd45b48a2cbf)
+
 
 
 ## Documentation
