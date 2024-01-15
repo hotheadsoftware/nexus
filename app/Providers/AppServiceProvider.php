@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Services\Colors;
 use App\Services\Domains;
 use App\Services\Environment;
+use App\Services\Nexus;
 use App\Services\Roles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
@@ -57,6 +58,10 @@ class AppServiceProvider extends ServiceProvider
 
     protected function setFacades(): void
     {
+        $this->app->singleton('nexus', function () {
+            return new Nexus();
+        });
+
         $this->app->bind('nexus.environment', function () {
             return new Environment($this->request);
         });
