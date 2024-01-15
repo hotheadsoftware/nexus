@@ -4,9 +4,19 @@ namespace Database\Seeders;
 
 use App\Models\Administrator;
 use App\Models\User;
+# do-not-remove-this-nexus-anchor-user-seeder-use-statements
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * This UserSeeder is managed programmatically by the Nexus artisan commands.
+ * We leave placeholder anchor comments in the file so Nexus can quickly insert
+ * the appropriate values as needed.
+ *
+ * If you modify or remove those comments, Nexus will no longer be able to create
+ * new user types for your panels. You can safely modify the code between the
+ * anchor comments.
+ */
 class UserSeeder extends Seeder
 {
     /**
@@ -31,5 +41,7 @@ class UserSeeder extends Seeder
             'password'          => Hash::make(config('panels.admin.user.password')),
             'email_verified_at' => now(),
         ]);
+
+        # do-not-remove-this-nexus-anchor-user-seeder-model-creation
     }
 }

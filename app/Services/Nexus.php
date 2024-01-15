@@ -2,8 +2,11 @@
 
 namespace App\Services;
 
-use Filament\Support\Colors\Color;
+use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\text;
 
 /**
  * Class Color
@@ -13,6 +16,86 @@ use Illuminate\Support\Collection;
  */
 class Nexus
 {
+
+    public static string $backupLocation = 'storage/app/nexus/backup/';
+
+
+    public function getPanelConfigurationInputs(Command $command) : Collection
+    {
+        $config = collect();
+
+        $config->put('name', $command->option('name') ?? text(
+            label: "What's the name of this panel?",
+            placeholder: 'App',
+            default: '',
+            required: true)
+        );
+
+        $config->put('tenant', $command->option('tenant') ?? select(
+            label: 'Is this a tenant panel?',
+            options: ['Yes', 'No'],
+            default: 'Yes',
+            required: true) == 'Yes'
+        );
+
+        $config->put('model', $command->option('model') ?? text(
+            label: "If the model doesn't exist, we'll create it under the appropriate Namespace.",
+            placeholder: 'User',
+            default: '',
+            required: true)
+        );
+
+        $config->put('login', $command->option('login') ?? select(
+            label: 'Should this panel have a login form?',
+            options: ['Yes', 'No'],
+            default: 'Yes',
+            required: true) == 'Yes'
+        );
+
+        $config->put('registration', $command->option('registration') ?? select(
+            label: 'Should user registration be an option?',
+            options: ['Yes', 'No'],
+            default: 'Yes',
+            required: true) == 'Yes'
+        );
+
+        $config->put('branding', $command->option('branding') ?? select(
+            label: 'Should custom branding be enabled?',
+            options: ['Yes', 'No'],
+            default: 'Yes',
+            required: true) == 'Yes'
+        );
+
+        if ($config->get('branding')) {
+
+            $config->put('copy_branding', $command->option('copy_branding') ?? select(
+                label: 'Should we copy an existing panel\'s custom branding?',
+                options: ['Yes', 'No'],
+                default: 'Yes',
+                required: true) == 'Yes'
+            );
+        }
+
+        if ($config->get('copy_branding')) {
+            $config->put('copy_branding_from', $command->option('copy_branding_from') ?? select(
+                label: 'Ok, which panel should we copy from?',
+                options: $this->panelNames()->filter(function($name){
+                    return $name !== 'admin';
+                })->toArray(),
+                required: true)
+            );
+        }
+
+        $config->put('api_tokens', $command->option('api_tokens') ?? select(
+            label: 'Will users of this panel need to generate API tokens?',
+            options: ['Yes', 'No'],
+            default: 'Yes',
+            required: true) == 'Yes'
+        );
+
+        return $config;
+    }
+
     /**
      * This reads the Providers/Filament directory, enumerating the provider files found there.
      * It pulls a list of words extracted as "the first word of each file found", which should

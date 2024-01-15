@@ -33,31 +33,9 @@ use PhpParser\NodeVisitorAbstract;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
 
-use function Laravel\Prompts\select;
-use function Laravel\Prompts\text;
-
-/**
- * Class CreateNexusPanel
- *
- * The goal here is to rewrite the Filament PanelProvider.stub file with the defaults we want.
- * This will allow a user to quickly wire up a new panel without a lot of manual work.
- *
- * TODO - Current Status: This script successfully rewrites the PanelProvider.stub file and
- * triggers creation of a new Panel.
- *
- * We still need to complete numerous steps to make this nearly automatic:
- *
- * 2. Create a new Model using the panel name (ucfirst).
- * 3. Create a new Migration using the panel name (ucfirst).
- * 4. Move the migration into the tenant subfolder.
- * 5. Add the new Model to the tenant UserSeeder.
- * 6. Add a new auth guard & driver based on the model name.
- * 7. Write new KEY/VALUE pairs to the .env file.
- * 8. Write new config values to the config/panels.php file.
- */
-class CreateNexusPanel extends Command
+class NexusMakePanelProviderStub extends Command
 {
-    protected $signature = 'nexus:create-panel
+    protected $signature = 'nexus:make-panel-provider-stub
                         {--name= : The name of the panel}
                         {--tenant= : Specify if this is a tenant panel}
                         {--model= : The model used for authentication}
@@ -68,7 +46,7 @@ class CreateNexusPanel extends Command
                         {--copy_branding_from= : The name of the panel to copy branding from}
                         {--api_tokens= : Indicate if users need to generate API tokens}';
 
-    protected $description = 'Command description';
+    protected $description = 'Updates the PanelProvider stub file with the desired configuration.';
 
     protected ?Collection $configuration = null;
 
@@ -76,27 +54,10 @@ class CreateNexusPanel extends Command
     // Enables more reliable file modification than string replacement.
     protected array $ast = [];
 
-    protected string $stubFilePath = 'vendor/filament/support/stubs/PanelProvider.stub';
+    public static string $stubFileDir = 'storage/app/nexus/stubs';
+    public static string $stubFilePath = 'vendor/filament/support/stubs/PanelProvider.stub';
 
-    protected function setCustomBrandingLocationComment(): void
-    {
-        $traverser = new NodeTraverser();
-        $traverser->addVisitor(new class extends NodeVisitorAbstract
-        {
-            public function enterNode(Node $node)
-            {
-                if ($node instanceof ClassMethod && $node->name->toString() === 'panel') {
-                    // Create a comment node
-                    $comment = new Comment('# Custom Branding Goes Here');
-
-                    // Attach the comment to the 'panel' method
-                    $node->setAttribute('comments', array_merge($node->getAttribute('comments', []), [$comment]));
-                }
-            }
-        });
-
-        $this->ast = $traverser->traverse($this->ast);
-    }
+    public static string $stubFilePathOld = 'storage/app/nexus/stubs/PanelProvider.stub.old';
 
     protected function escapeBackslashes(string $content): string
     {
@@ -115,9 +76,11 @@ class CreateNexusPanel extends Command
         return str_replace($find, $replace, $content);
     }
 
-    public function handle(): void
+    public function handle(): int|string
     {
-        // Retain this - we'll use it to restore the file at the end.
+        File::isDirectory(static::$stubFileDir) || File::makeDirectory(static::$stubFileDir, 0755, true, true);
+        File::copy(static::$stubFilePath, static::$stubFilePathOld);
+
         $originalContent    = $this->getStubFile();
         $originalClassName  = '{{ class }}';
         $temporaryClassName = 'StubClassName';
@@ -125,7 +88,8 @@ class CreateNexusPanel extends Command
 
         try {
 
-            $this->configuration = $this->getConfiguration();
+            $this->configuration = Nexus::getPanelConfigurationInputs($this);
+            $this->validateUniquePanelName($this->configuration->get('name'));
 
             $content   = str_replace($originalClassName, $temporaryClassName, $originalContent);
             $content   = str_replace('/{{ directory }}/', '/\'.ucfirst(self::PANEL).\'/', $content);
@@ -145,37 +109,21 @@ class CreateNexusPanel extends Command
             $this->setApiTokens();
             $this->setCustomBrandingLocationComment();
 
-            // Write the AST to the Stub file.
-            $prettyPrinter = new Standard();
-            $content       = $prettyPrinter->prettyPrintFile($this->ast);
-            $content       = str_replace($temporaryClassName, $originalClassName, $content);
-            $content       = $this->setCustomBranding($content);
-            $content       = $this->escapeBackSlashes($content);
+            $printer = new Standard();
+            $content = $printer->prettyPrintFile($this->ast);
+            $content = str_replace($temporaryClassName, $originalClassName, $content);
+            $content = $this->setCustomBranding($content);
+            $content = $this->escapeBackSlashes($content);
 
             $this->setStubFile($content);
 
-            $this->call('make:filament-panel', [
-                'id' => $this->ask('What is the ID?'),
-            ]);
-
-            // Create the auth guard
-            // Create the auth provider
-            // Create the Model
-            // Create the migration & move it to the tenant folder
-            // Populate the migration with the field contents from the user migration
-            // Add the .env & .env.example variables
-            // Add the config/panels.php references
-            // The tenant/UserSeeder needs to be updated to include the new Model
-            // Call artisan tenant:seed to create new users for each tenant
-            // Write a tenant seeder to ensure that all panels have brands in 1:1 for each tenant.
-
         } catch (Exception $e) {
+            $this->call('nexus:revert-panel-provider-stub');
             $this->error($e->getMessage());
-        } finally {
-            $this->setStubFile($originalContent);
+            throw $e;
         }
 
-        $this->setStubFile($originalContent);
+        return $this::$stubFilePath;
     }
 
     protected function setCustomBranding(string $content): string
@@ -198,22 +146,22 @@ class CreateNexusPanel extends Command
 
     protected function getStubFile(): string
     {
-        if (! File::exists($this->stubFilePath)) {
+        if (! File::exists($this::$stubFilePath)) {
             $this->error('File not found!');
             exit;
         }
 
-        return File::get($this->stubFilePath);
+        return File::get($this::$stubFilePath);
     }
 
     protected function setStubFile($content): string
     {
-        if (! File::exists($this->stubFilePath)) {
+        if (! File::exists($this::$stubFilePath)) {
             $this->error('File not found!');
             exit;
         }
 
-        File::put($this->stubFilePath, $content);
+        File::put($this::$stubFilePath, $content);
 
         return $this->getStubFile();
     }
@@ -313,104 +261,12 @@ class CreateNexusPanel extends Command
         }
     }
 
-    protected function getInput(
-        string $info,
-        string $label,
-        string $placeholder,
-        string $type,
-        string $default = ''
-    ): string {
-        $this->info($info);
-
-        return match ($type) {
-            'bool'  => select(label: $label, options: ['Yes', 'No'], default: 'Yes', required: true) == 'Yes',
-            default => text(label: $label, placeholder: $placeholder, default: $default, required: true),
-        };
-
-    }
-
     protected function validateUniquePanelName(string $name): void
     {
         if (Nexus::panelNames()->contains($name)) {
             $this->error('A panel with that name already exists.');
             exit;
         }
-    }
-
-    protected function getConfiguration(): Collection
-    {
-        $config = collect();
-
-        $config->put('name', $this->option('name') ?? $this->getInput(
-            info: "We'll use the Panel ID as the name and URL path.",
-            label: "What's the name of this panel?",
-            placeholder: 'App',
-            type: 'text',
-        ));
-
-        $this->validateUniquePanelName($config->get('name'));
-
-        $config->put('tenant', $this->option('tenant') ?? $this->getInput(
-            info: 'If this is a tenant panel, any created items will be namespaced under tenant or Tenant.',
-            label: 'Is this a tenant panel?',
-            placeholder: 'Yes',
-            type: 'bool',
-        ));
-
-        $config->put('model', $this->option('model') ?? $this->getInput(
-            info: "If the model doesn't exist, we'll create it under the appropriate Namespace.",
-            label: 'Which model will be used for Authenticating users?',
-            placeholder: 'User',
-            type: 'text',
-        ));
-
-        $config->put('login', $this->option('login') ?? $this->getInput(
-            info: 'Some panels may not need a login form; for example, if your existing logged-in users will be using panel-switching.',
-            label: 'Should this panel have a login form?',
-            placeholder: 'Yes',
-            type: 'bool',
-        ));
-
-        $config->put('registration', $this->option('registration') ?? $this->getInput(
-            info: 'Choose Yes if registration should *ever* be an option on this panel. You can enable/disable from the interface.',
-            label: 'Should user registration be an option?',
-            placeholder: 'Yes',
-            type: 'bool',
-        ));
-
-        $config->put('branding', $this->option('branding') ?? $this->getInput(
-            info: 'Custom Branding is managed from the Account panel.',
-            label: 'Should custom branding be enabled?',
-            placeholder: 'Yes',
-            type: 'bool',
-        ));
-
-        if ($config->get('branding')) {
-            $config->put('copy_branding', $this->option('copy_branding') ?? $this->getInput(
-                info: "If you've already customized another panel, we can use the branding from that panel.",
-                label: "Should we copy an existing panel's custom branding?",
-                placeholder: 'Yes',
-                type: 'bool',
-            ));
-        }
-
-        if ($config->get('copy_branding')) {
-            $config->put('copy_branding_from', $this->option('copy_branding_from') ?? $this->getInput(
-                info: 'Ok, which panel should we copy from?',
-                label: 'Enter the name of an existing panel with custom branding:',
-                placeholder: 'App',
-                type: 'text',
-            ));
-        }
-
-        $config->put('api_tokens', $this->option('api_tokens') ?? $this->getInput(
-            info: "Note: If sharing auth models and another panel already allows token generation, this isn't needed.",
-            label: 'Will users of this panel need to generate API tokens?',
-            placeholder: 'Yes',
-            type: 'bool',
-        ));
-
-        return $config;
     }
 
     protected function ensureMiddlewareExists(): void
@@ -648,35 +504,56 @@ class CreateNexusPanel extends Command
     {
         $traverser = new NodeTraverser();
         $traverser->addVisitor(new class($method) extends NodeVisitorAbstract
-        {
-            public function __construct(public string $method, public array $args = [])
             {
-            }
-
-            public function leaveNode(Node $node): void
-            {
-                if ($node instanceof ClassMethod && $node->name->toString() === 'panel') {
-                    $this->traverseMethodCalls($node->stmts);
+                public function __construct(public string $method, public array $args = [])
+                {
                 }
-            }
 
-            private function traverseMethodCalls(array $stmts): void
-            {
-                foreach ($stmts as $stmt) {
-                    if ($stmt instanceof Node\Stmt\Return_ && $stmt->expr instanceof MethodCall) {
-                        $current = $stmt->expr;
-                        while ($current instanceof MethodCall) {
-                            $methodName = $current->name->toString();
-                            if ($methodName == $this->method) {
-                                $current->args = [new Arg(new ClassConstFetch(new Name('self'), new Identifier('PANEL')))];
+                public function leaveNode(Node $node): void
+                {
+                    if ($node instanceof ClassMethod && $node->name->toString() === 'panel') {
+                        $this->traverseMethodCalls($node->stmts);
+                    }
+                }
+
+                private function traverseMethodCalls(array $stmts): void
+                {
+                    foreach ($stmts as $stmt) {
+                        if ($stmt instanceof Node\Stmt\Return_ && $stmt->expr instanceof MethodCall) {
+                            $current = $stmt->expr;
+                            while ($current instanceof MethodCall) {
+                                $methodName = $current->name->toString();
+                                if ($methodName == $this->method) {
+                                    $current->args = [new Arg(new ClassConstFetch(new Name('self'), new Identifier('PANEL')))];
+                                }
+                                $current = $current->var;
                             }
-                            $current = $current->var;
                         }
                     }
                 }
             }
-        }
         );
+        $this->ast = $traverser->traverse($this->ast);
+    }
+
+
+    protected function setCustomBrandingLocationComment(): void
+    {
+        $traverser = new NodeTraverser();
+        $traverser->addVisitor(new class extends NodeVisitorAbstract
+        {
+            public function enterNode(Node $node): void
+            {
+                if ($node instanceof ClassMethod && $node->name->toString() === 'panel') {
+                    // Create a comment node
+                    $comment = new Comment('# Custom Branding Goes Here');
+
+                    // Attach the comment to the 'panel' method
+                    $node->setAttribute('comments', array_merge($node->getAttribute('comments', []), [$comment]));
+                }
+            }
+        });
+
         $this->ast = $traverser->traverse($this->ast);
     }
 }

@@ -15,7 +15,11 @@ use Spatie\Permission\Traits\HasRoles;
 
 class Operator extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditable, FilamentUser
 {
-    use Auditable, AuthenticationLoggable, HasApiTokens, HasRoles, Notifiable;
+    use Auditable,
+        AuthenticationLoggable,
+        HasApiTokens,
+        HasRoles,
+        Notifiable;
 
     public function canAccessPanel(Panel $panel): bool
     {

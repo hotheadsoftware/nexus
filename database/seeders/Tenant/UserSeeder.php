@@ -2,10 +2,19 @@
 
 namespace Database\Seeders\Tenant;
 
-use App\Models\Operator;
 use Illuminate\Database\Seeder;
+# do-not-remove-this-nexus-anchor-user-seeder-use-statements
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * This UserSeeder is managed programmatically by the Nexus artisan commands.
+ * We leave placeholder anchor comments in the file so Nexus can quickly insert
+ * the appropriate values as needed.
+ *
+ * If you modify or remove those comments, Nexus will no longer be able to create
+ * new user types for your panels. You can safely modify the code between the
+ * anchor comments.
+ */
 class UserSeeder extends Seeder
 {
     /**
@@ -19,12 +28,7 @@ class UserSeeder extends Seeder
          * create users, etc. as needed. We'll use impersonation in prod where needed.
          */
         if (app()->environment() === 'local') {
-            Operator::create([
-                'name'              => config('panels.operate.user.name'),
-                'email'             => config('panels.operate.user.email'),
-                'password'          => Hash::make(config('panels.operate.user.password')),
-                'email_verified_at' => now(),
-            ]);
+            # do-not-remove-this-nexus-anchor-user-seeder-model-creation
         }
     }
 }
