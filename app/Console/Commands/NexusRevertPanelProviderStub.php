@@ -13,8 +13,9 @@ class NexusRevertPanelProviderStub extends Command
 
     public function handle(): void
     {
-        if(!File::isDirectory(NexusMakePanelProviderStub::$stubFileDir)) {
-            $this->warn(NexusMakePanelProviderStub::$stubFileDir . ' does not exist. Nothing to revert.');
+        if (! File::isDirectory(NexusMakePanelProviderStub::$stubFileDir)) {
+            $this->warn(NexusMakePanelProviderStub::$stubFileDir.' does not exist. Nothing to revert.');
+
             return;
         }
 

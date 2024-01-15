@@ -16,11 +16,9 @@ use function Laravel\Prompts\text;
  */
 class Nexus
 {
-
     public static string $backupLocation = 'storage/app/nexus/backup/';
 
-
-    public function getPanelConfigurationInputs(Command $command) : Collection
+    public function getPanelConfigurationInputs(Command $command): Collection
     {
         $config = collect();
 
@@ -79,7 +77,7 @@ class Nexus
         if ($config->get('copy_branding')) {
             $config->put('copy_branding_from', $command->option('copy_branding_from') ?? select(
                 label: 'Ok, which panel should we copy from?',
-                options: $this->panelNames()->filter(function($name){
+                options: $this->panelNames()->filter(function ($name) {
                     return $name !== 'admin';
                 })->toArray(),
                 required: true)

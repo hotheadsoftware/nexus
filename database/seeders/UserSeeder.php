@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Administrator;
 use App\Models\User;
-# do-not-remove-this-nexus-anchor-user-seeder-use-statements
+// do-not-remove-this-nexus-anchor-user-seeder-use-statements
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -42,6 +42,6 @@ class UserSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        # do-not-remove-this-nexus-anchor-user-seeder-model-creation
+        // do-not-remove-this-nexus-anchor-user-seeder-model-creation
     }
 }

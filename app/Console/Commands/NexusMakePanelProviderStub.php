@@ -55,6 +55,7 @@ class NexusMakePanelProviderStub extends Command
     protected array $ast = [];
 
     public static string $stubFileDir = 'storage/app/nexus/stubs';
+
     public static string $stubFilePath = 'vendor/filament/support/stubs/PanelProvider.stub';
 
     public static string $stubFilePathOld = 'storage/app/nexus/stubs/PanelProvider.stub.old';
@@ -504,38 +505,37 @@ class NexusMakePanelProviderStub extends Command
     {
         $traverser = new NodeTraverser();
         $traverser->addVisitor(new class($method) extends NodeVisitorAbstract
+        {
+            public function __construct(public string $method, public array $args = [])
             {
-                public function __construct(public string $method, public array $args = [])
-                {
-                }
+            }
 
-                public function leaveNode(Node $node): void
-                {
-                    if ($node instanceof ClassMethod && $node->name->toString() === 'panel') {
-                        $this->traverseMethodCalls($node->stmts);
-                    }
+            public function leaveNode(Node $node): void
+            {
+                if ($node instanceof ClassMethod && $node->name->toString() === 'panel') {
+                    $this->traverseMethodCalls($node->stmts);
                 }
+            }
 
-                private function traverseMethodCalls(array $stmts): void
-                {
-                    foreach ($stmts as $stmt) {
-                        if ($stmt instanceof Node\Stmt\Return_ && $stmt->expr instanceof MethodCall) {
-                            $current = $stmt->expr;
-                            while ($current instanceof MethodCall) {
-                                $methodName = $current->name->toString();
-                                if ($methodName == $this->method) {
-                                    $current->args = [new Arg(new ClassConstFetch(new Name('self'), new Identifier('PANEL')))];
-                                }
-                                $current = $current->var;
+            private function traverseMethodCalls(array $stmts): void
+            {
+                foreach ($stmts as $stmt) {
+                    if ($stmt instanceof Node\Stmt\Return_ && $stmt->expr instanceof MethodCall) {
+                        $current = $stmt->expr;
+                        while ($current instanceof MethodCall) {
+                            $methodName = $current->name->toString();
+                            if ($methodName == $this->method) {
+                                $current->args = [new Arg(new ClassConstFetch(new Name('self'), new Identifier('PANEL')))];
                             }
+                            $current = $current->var;
                         }
                     }
                 }
             }
+        }
         );
         $this->ast = $traverser->traverse($this->ast);
     }
-
 
     protected function setCustomBrandingLocationComment(): void
     {

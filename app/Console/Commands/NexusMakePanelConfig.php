@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-
 use App\Services\Nexus;
 use Exception;
 use Illuminate\Console\Command;
@@ -19,12 +18,12 @@ class NexusMakePanelConfig extends Command
      */
     public function handle(): void
     {
-        $model = strtolower($this->argument('model'));
+        $model       = strtolower($this->argument('model'));
         $model_upper = strtoupper($model);
 
         // Backup the file before proceeding.
         File::isDirectory(Nexus::$backupLocation.'/config') or File::makeDirectory(Nexus::$backupLocation.'/config', 0777, true, true);
-        File::copy(config_path('panels.php'), Nexus::$backupLocation . '/config/panels.php');
+        File::copy(config_path('panels.php'), Nexus::$backupLocation.'/config/panels.php');
 
         try {
 
@@ -41,7 +40,7 @@ class NexusMakePanelConfig extends Command
             File::put(config_path('panels.php'), $content);
 
         } catch (Exception $e) {
-            File::copy(Nexus::$backupLocation . '/config/panels.php', config_path('panels.php'));
+            File::copy(Nexus::$backupLocation.'/config/panels.php', config_path('panels.php'));
             $this->error($e->getMessage());
             throw $e;
         }

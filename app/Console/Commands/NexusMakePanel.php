@@ -81,7 +81,6 @@ class NexusMakePanel extends Command
         }
     }
 
-
     protected function getInput(
         string $info,
         string $label,
@@ -92,10 +91,9 @@ class NexusMakePanel extends Command
         $this->info($info);
 
         return match ($type) {
-            'bool' => select(label: $label, options: ['Yes', 'No'], default: 'Yes', required: true) == 'Yes',
+            'bool'  => select(label: $label, options: ['Yes', 'No'], default: 'Yes', required: true) == 'Yes',
             default => text(label: $label, placeholder: $placeholder, default: $default, required: true),
         };
 
     }
-
 }

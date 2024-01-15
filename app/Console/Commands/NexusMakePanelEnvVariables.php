@@ -25,18 +25,18 @@ class NexusMakePanelEnvVariables extends Command
 
         // Backup .env and .env.example in case of error.
         File::isDirectory(Nexus::$backupLocation.'/env') || File::makeDirectory(Nexus::$backupLocation.'/env', 0777, true, true);
-        File::copy(base_path('.env'), Nexus::$backupLocation . '/env/.env');
-        File::copy(base_path('.env.example'), Nexus::$backupLocation . '/env/.env.example');
+        File::copy(base_path('.env'), Nexus::$backupLocation.'/env/.env');
+        File::copy(base_path('.env.example'), Nexus::$backupLocation.'/env/.env.example');
 
         try {
 
-            $this->writeEnv($model,'.env');
-            $this->writeEnv($model,'.env.example');
+            $this->writeEnv($model, '.env');
+            $this->writeEnv($model, '.env.example');
 
         } catch (Exception $e) {
             // Restore .env and .env.example to their preserved versions.
-            File::copy(Nexus::$backupLocation . '/env/.env', base_path('.env'));
-            File::copy(Nexus::$backupLocation . '/env/.env.example', base_path('.env.example'));
+            File::copy(Nexus::$backupLocation.'/env/.env', base_path('.env'));
+            File::copy(Nexus::$backupLocation.'/env/.env.example', base_path('.env.example'));
             $this->error($e->getMessage());
             throw $e;
         }

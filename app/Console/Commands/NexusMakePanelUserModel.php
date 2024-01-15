@@ -18,10 +18,11 @@ class NexusMakePanelUserModel extends Command
 
         $central_connection = $tenant ? '' : "\n        protected \$connection = 'central';\n";
 
-        $this->info("Checking model existence...");
+        $this->info('Checking model existence...');
 
         if (file_exists(app_path("Models/{$model}.php"))) {
             $this->warn("Model {$model} already exists.");
+
             return;
         }
 
@@ -48,7 +49,7 @@ class NexusMakePanelUserModel extends Command
             'use Spatie\Permission\Traits\HasRoles;',
         ];
 
-        foreach($model_imports as $import) {
+        foreach ($model_imports as $import) {
             $content = str_replace('use Illuminate\Database\Eloquent\Model;',
                 "use Illuminate\Database\Eloquent\Model;\n$import",
                 $content

@@ -7,7 +7,6 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 
-
 class NexusRestoreLatestAuthBackup extends Command
 {
     protected $signature = 'nexus:restore-latest-auth-backup';
@@ -21,10 +20,10 @@ class NexusRestoreLatestAuthBackup extends Command
     {
         $this->info('Restoring latest backup of auth.php...');
 
-        if(!File::isDirectory(Nexus::$backupLocation)) {
+        if (! File::isDirectory(Nexus::$backupLocation)) {
             throw new Exception('Backup Directory not found!');
         }
-        if(!File::exists(Nexus::$backupLocation.'auth.php')) {
+        if (! File::exists(Nexus::$backupLocation.'auth.php')) {
             throw new Exception('No auth.php backup found!');
         }
 
@@ -33,4 +32,3 @@ class NexusRestoreLatestAuthBackup extends Command
         $this->info('Latest backup restored.');
     }
 }
-
