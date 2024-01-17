@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-// do-not-remove-this-nexus-anchor-user-seeder-use-statements
+# do-not-remove-this-nexus-anchor-user-seeder-use-statements
 use App\Models\Administrator;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -52,7 +52,7 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
             ]);
 
-            // do-not-remove-this-nexus-anchor-user-seeder-model-creation
+            # do-not-remove-this-nexus-anchor-user-seeder-model-creation
         }
     }
 }

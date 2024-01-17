@@ -4,7 +4,7 @@ namespace Database\Seeders\Tenant;
 
 use Illuminate\Database\Seeder;
 
-// do-not-remove-this-nexus-anchor-user-seeder-use-statements
+# do-not-remove-this-nexus-anchor-user-seeder-use-statements
 
 /**
  * This UserSeeder is managed programmatically by the Nexus artisan commands.
@@ -28,7 +28,7 @@ class UserSeeder extends Seeder
          * create users, etc. as needed. We'll use impersonation in prod where needed.
          */
         if (app()->environment() === 'local') {
-            // do-not-remove-this-nexus-anchor-user-seeder-model-creation
+            # do-not-remove-this-nexus-anchor-user-seeder-model-creation
         }
     }
 }
