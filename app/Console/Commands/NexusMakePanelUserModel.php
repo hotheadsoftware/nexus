@@ -13,28 +13,29 @@ class NexusMakePanelUserModel extends Command
 
     public function handle(): void
     {
-        $model  = $this->argument('model');
-        $tenant = (bool) $this->option('tenant');
+        $model      = $this->argument('model');
+        $tenant     = (bool) $this->option('tenant');
+        $tenantPath = $tenant ? 'Tenant/' : '';
 
         $central_connection = $tenant ? '' : "\n        protected \$connection = 'central';\n";
 
         $this->info('Checking model existence...');
 
-        if (file_exists(app_path("Models/{$model}.php"))) {
+        if (file_exists(app_path("Models/$tenantPath$model.php"))) {
             $this->warn("Model {$model} already exists.");
 
             return;
         }
 
-        $this->info("Creating model {$model}...");
-
         $this->call('make:model', [
-            'name' => $model,
+            'name' => $tenantPath.$model,
         ]);
 
-        $this->info("Model {$model} created. Updating imports and class definition...");
+        $this->info("Creating model $tenantPath$model...");
 
-        $modelPath = app_path("Models/{$model}.php");
+        $this->info("Model $tenantPath$model created. Updating imports and class definition...");
+
+        $modelPath = app_path("Models/$tenantPath$model.php");
 
         $content = File::get($modelPath);
 

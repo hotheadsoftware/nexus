@@ -18,9 +18,11 @@ class NexusUpdatePanelSeeder extends Command
         $model       = $this->argument('model');
         $model_lower = strtolower($model);
 
-        $tenant              = $this->option('tenant');
-        $seederPathPrefix    = $tenant ? 'Tenant/' : '';
-        $seederPathDir       = "database/seeders/$seederPathPrefix";
+        $tenant         = $this->option('tenant');
+        $tenantUsePath  = $tenant ? 'Tenant\\' : '';
+        $tenantFilePath = $tenant ? 'Tenant/' : '';
+
+        $seederPathDir       = "database/seeders/$tenantFilePath";
         $seederPath          = "{$seederPathDir}UserSeeder.php";
         $seederBackupPathDir = Nexus::$backupLocation."$seederPathDir";
         $seederBackupPath    = Nexus::$backupLocation."$seederPath";
@@ -36,25 +38,28 @@ class NexusUpdatePanelSeeder extends Command
             $content = File::get(base_path($seederPath));
 
             $anchorComment = '# do-not-remove-this-nexus-anchor-user-seeder-use-statements';
-            $content       = str_replace($anchorComment, "use App\\Models\\$model;\n$anchorComment", $content);
+            $content       = str_replace($anchorComment, "use App\\Models\\$tenantUsePath$model;\n$anchorComment",
+                $content);
 
             if (! Str::contains($content, 'use Illuminate\\Support\\Facades\\Hash;')) {
-                $content = str_replace($anchorComment, "use Illuminate\\Support\\Facades\\Hash;\n$anchorComment", $content);
+                $content = str_replace($anchorComment, "use Illuminate\\Support\\Facades\\Hash;\n$anchorComment",
+                    $content);
             }
 
             $anchorComment = '# do-not-remove-this-nexus-anchor-user-seeder-model-creation';
-            $content       = str_replace($anchorComment, "$model::firstOrCreate([\n            'email' => config('panels.$model_lower.user.email')\n        ], [
-                'name'              => config('panels.$model_lower.user.name'),
-                'email'             => config('panels.$model_lower.user.email'),
-                'password'          => Hash::make(config('panels.$model_lower.user.password')),
+            $content       = str_replace($anchorComment, "$model::firstOrCreate([\n                'email' => config('nexus.$model_lower.user.email')\n            ], [
+                'name'              => config('nexus.$model_lower.user.name'),
+                'email'             => config('nexus.$model_lower.user.email'),
+                'password'          => Hash::make(config('nexus.$model_lower.user.password')),
                 'email_verified_at' => now(),
-        ]);\n\n        $anchorComment", $content);
+            ]);\n\n            $anchorComment", $content);
 
             File::put(base_path($seederPath), $content);
 
-        } catch (\Exception) {
-            // Rollback to the previous seeder.
+        } catch (\Exception $e) {
             File::copy($seederBackupPath, base_path($seederPath));
+            $this->error($e);
+            throw $e;
         }
     }
 }

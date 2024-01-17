@@ -39,46 +39,57 @@ class NexusMakePanel extends Command
 
             $this->configuration = Nexus::getPanelConfigurationInputs($this);
 
-            $this->call('make:nexus-panel-provider-stub', $this->configuration->toArray());
+            $modelAndTenant = [
+                'model'    => $this->configuration->get('name'),
+                '--tenant' => $this->configuration->get('tenant'),
+            ];
+
+            $this->call('nexus:make-panel-provider-stub',
+                $this->configuration->mapWithKeys(function ($value, $key) {
+                    return ['--'.$key => $value];
+                })->toArray()
+            );
 
             $this->call('make:filament-panel', [
-                'id' => $this->ask('What is the ID?'),
+                'id' => $this->configuration->get('name'),
             ]);
 
             $this->call('nexus:revert-panel-provider-stub');
 
-            $this->call('make:model', [
-                'name' => $this->configuration->get('name'),
-            ]);
+            $this->call('nexus:make-panel-user-model', $modelAndTenant);
 
-            $this->call('nexus:make-auth-guard-and-provider', [
-                'model' => $this->configuration->get('name'),
-            ]);
+            $this->call('nexus:make-panel-user-migration', $modelAndTenant);
 
-            $this->call('nexus:update-panel-model-for-auth', [
-                'model' => $this->configuration->get('name'),
-            ]);
-
-            $this->call('nexus:make-panel-user-migration', [
-                'model' => $this->configuration->get('name'),
-            ]);
+            $this->call('nexus:make-auth-guard-and-provider', $modelAndTenant);
 
             $this->call('nexus:make-panel-config', [
                 'model' => $this->configuration->get('name'),
             ]);
 
-            $this->call('nexus:make-env-variables', [
+            $this->call('nexus:make-panel-env-variables', [
                 'model' => $this->configuration->get('name'),
             ]);
 
-            $this->call('nexus:update-panel-seeder', [
-                'model' => $this->configuration->get('name'),
-            ]);
+            $this->call('nexus:update-panel-seeder', $modelAndTenant);
+
+            $this->call('nexus:seed-tenants');
 
         } catch (Exception $e) {
             $this->error($e->getMessage());
             exit;
         }
+    }
+
+    protected function getModelAndTenantConfig(): array
+    {
+        $modelAndTenant = [
+            'model' => $this->configuration->get('name'),
+        ];
+        if ($this->configuration->get('tenant')) {
+            $modelAndTenant['--tenant'] = true;
+        }
+
+        return $modelAndTenant;
     }
 
     protected function getInput(

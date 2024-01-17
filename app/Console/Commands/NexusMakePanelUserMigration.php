@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class NexusMakePanelUserMigration extends Command
 {
-    protected $signature = 'nexus:make-panel-user-migration {model}';
+    protected $signature = 'nexus:make-panel-user-migration {model} {--tenant}';
 
     protected $description = 'Clones the users table migration to create a migration for the provided model.';
 
@@ -16,7 +16,10 @@ class NexusMakePanelUserMigration extends Command
     {
         $model          = Str::plural(strtolower(trim($this->argument('model'))));
         $migrationsPath = database_path('migrations');
-        $targetPath     = $migrationsPath.DIRECTORY_SEPARATOR.'tenant'.DIRECTORY_SEPARATOR.date('Y_m_d_His')."_create_{$model}_table.php";
+
+        $tenantPath = $this->option('tenant') ? 'tenant'.DIRECTORY_SEPARATOR : '';
+
+        $targetPath = $migrationsPath.DIRECTORY_SEPARATOR.$tenantPath.date('Y_m_d_His')."_create_{$model}_table.php";
 
         $files = File::files($migrationsPath);
 

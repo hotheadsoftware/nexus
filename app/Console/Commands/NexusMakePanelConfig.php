@@ -23,11 +23,11 @@ class NexusMakePanelConfig extends Command
 
         // Backup the file before proceeding.
         File::isDirectory(Nexus::$backupLocation.'/config') or File::makeDirectory(Nexus::$backupLocation.'/config', 0777, true, true);
-        File::copy(config_path('panels.php'), Nexus::$backupLocation.'/config/panels.php');
+        File::copy(config_path('nexus.php'), Nexus::$backupLocation.'/config/nexus.php');
 
         try {
 
-            $content = File::get(config_path('panels.php'));
+            $content = File::get(config_path('nexus.php'));
 
             $content = str_replace("],\n];", "],\n\n    '$model' => [
         'user' => [
@@ -37,10 +37,10 @@ class NexusMakePanelConfig extends Command
         ],
     ],\n];", $content);
 
-            File::put(config_path('panels.php'), $content);
+            File::put(config_path('nexus.php'), $content);
 
         } catch (Exception $e) {
-            File::copy(Nexus::$backupLocation.'/config/panels.php', config_path('panels.php'));
+            File::copy(Nexus::$backupLocation.'/config/nexus.php', config_path('nexus.php'));
             $this->error($e->getMessage());
             throw $e;
         }

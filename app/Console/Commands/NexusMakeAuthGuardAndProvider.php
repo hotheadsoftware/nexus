@@ -2,14 +2,14 @@
 
 namespace App\Console\Commands;
 
-use App\Facades\Nexus;
+use App\Services\Nexus;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 class NexusMakeAuthGuardAndProvider extends Command
 {
-    protected $signature = 'nexus:make-auth-guard-and-provider {model}';
+    protected $signature = 'nexus:make-auth-guard-and-provider {model} {--tenant}';
 
     protected $description = 'Writes config/auth.php to accommodate Nexus Panel auth guard and provider';
 
@@ -20,8 +20,11 @@ class NexusMakeAuthGuardAndProvider extends Command
 
         $content = File::get(config_path('auth.php'));
 
+        $tenant     = $this->option('tenant');
+        $tenantPath = $tenant ? 'Tenant\\' : '';
+
         $model           = $this->argument('model');
-        $model_reference = "App\\Models\\$model::class";
+        $model_reference = "App\\Models\\$tenantPath$model::class";
         $model_lower     = Str::lower($model);
         $model_plural    = Str::plural($model_lower);
 
