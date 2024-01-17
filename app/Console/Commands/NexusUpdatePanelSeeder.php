@@ -37,7 +37,7 @@ class NexusUpdatePanelSeeder extends Command
 
             $content = File::get(base_path($seederPath));
 
-            $anchorComment = '# do-not-remove-this-nexus-anchor-user-seeder-use-statements';
+            $anchorComment = '// do-not-remove-this-nexus-anchor-user-seeder-use-statements';
             $content       = str_replace($anchorComment, "use App\\Models\\$tenantUsePath$model;\n$anchorComment",
                 $content);
 
@@ -46,7 +46,7 @@ class NexusUpdatePanelSeeder extends Command
                     $content);
             }
 
-            $anchorComment = '# do-not-remove-this-nexus-anchor-user-seeder-model-creation';
+            $anchorComment = '// do-not-remove-this-nexus-anchor-user-seeder-model-creation';
             $content       = str_replace($anchorComment, "$model::firstOrCreate([\n                'email' => config('nexus.$model_lower.user.email')\n            ], [
                 'name'              => config('nexus.$model_lower.user.name'),
                 'email'             => config('nexus.$model_lower.user.email'),
