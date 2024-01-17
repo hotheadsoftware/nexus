@@ -8,7 +8,7 @@ use Illuminate\Console\Command;
 
 class NexusSeedTenants extends Command
 {
-    protected $signature = 'nexus:seed-tenants {model} {--tenant}';
+    protected $signature = 'nexus:seed-tenants';
 
     protected $description = 'Adds the new user type to the appropriate user seeder.';
 
