@@ -322,10 +322,12 @@ class CreateNexusPanel extends Command
     ): string {
         $this->info($info);
 
-        return match ($type) {
-            'bool'  => select(label: $label, options: ['Yes', 'No'], default: 'Yes', required: true) == 'Yes',
+        $input = match ($type) {
+            'bool'  => select(label: $label, options: ['Yes', 'No'], default: 'Yes', required: true),
             default => text(label: $label, placeholder: $placeholder, default: $default, required: true),
         };
+
+        return $type === 'bool' ? $input == 'Yes' : trim($input);
 
     }
 
