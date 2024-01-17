@@ -87,7 +87,7 @@ class AdministratorResource extends Resource
         return [
             'index'  => Pages\ListAdministrators::route('/'),
             'create' => Pages\CreateAdministrator::route('/create'),
-            'edit'   => Pages\EditAdministrator::route('/{record}/edit'),
+            'edit'   => Pages\EditAdministrator::route('/{rec  ord}/edit'),
         ];
     }
 }
