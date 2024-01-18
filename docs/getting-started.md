@@ -37,19 +37,19 @@ doing so. Think end users, buyers, sellers, etc.
 
 Example Single-User-Tier Architecture:
 
-| Tier | Panel   | User Type | Ownership | Description                                      | Path       |
-|------|---------|-----------|-----------|--------------------------------------------------|------------|
-| 0    | Admin   | Admin     | Owner     | Owner, Operating & Supporting the App/Platform   | `/admin`   |
-| 0    | Account | User      | User      | User, managing subscriptions and global settings | `/account` |
-| 1    | Operate | Operator  | User      | End Users, using the application as offered      | `/app`     |
+| Tier | Panel   | User Type | Ownership  | Description                                      | Path       |
+|------|---------|-----------|------------|--------------------------------------------------|------------|
+| 0    | Admin   | Admin     | Owner      | Owner, Operating & Supporting the App/Platform   | `/admin`   |
+| 0    | Account | User      | Subscriber | User, managing subscriptions and global settings | `/account` |
+| 1    | App     | AppUser   | Subscriber | End Users, using the application as offered      | `/app`     |
 
 Example Multi-User-Tier Architecture:
 
-| Tier | Panel   | User Type | Ownership | Description                                                         | Path       |
-|------|---------|-----------|-----------|---------------------------------------------------------------------|------------|
-| 0    | Admin   | Admin     | Owner     | Owner, Operating & Supporting the App/Platform                      | `/admin`   |
-| 0    | Account | User      | User      | User, managing subscriptions and global settings                    | `/account` |
-| 1    | Operate | Operator  | User      | User's employees, configuring & reporting on the platform.          | `/operate` |
-| 2    | Buyer   | Buyer     | User      | Third-party Business Partners, Logging in, generating reports, etc. | `/buyer`   |
-| 3    | Seller  | Seller    | User      | Third-party Business Partners, Logging in, generating reports, etc. | `/seller`  |
+| Tier | Panel   | User Type | Ownership  | Description                                                         | Path       |
+|------|---------|-----------|------------|---------------------------------------------------------------------|------------|
+| 0    | Admin   | Admin     | Owner      | Owner, Operating & Supporting the App/Platform                      | `/admin`   |
+| 0    | Account | User      | Subscriber | User, managing subscriptions and global settings                    | `/account` |
+| 1    | Manage  | Manager   | Subscriber | User's employees, configuring & reporting on the platform.          | `/operate` |
+| 2    | Buyer   | Buyer     | Subscriber | Third-party Business Partners, Logging in, generating reports, etc. | `/buyer`   |
+| 3    | Seller  | Seller    | Subscriber | Third-party Business Partners, Logging in, generating reports, etc. | `/seller`  |
 

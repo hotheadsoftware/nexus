@@ -9,14 +9,6 @@ return [
         ],
     ],
 
-    'operate' => [
-        'user' => [
-            'name'     => env('OPERATE_PANEL_USER_NAME', ''),
-            'email'    => env('OPERATE_PANEL_USER_EMAIL', ''),
-            'password' => env('OPERATE_PANEL_USER_PASSWORD', ''),
-        ],
-    ],
-
     'admin' => [
         'user' => [
             'name'     => env('ADMIN_PANEL_USER_NAME', ''),

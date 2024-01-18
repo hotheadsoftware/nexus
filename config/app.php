@@ -172,7 +172,6 @@ return [
         App\Providers\HorizonServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,
         App\Providers\Filament\AccountPanelProvider::class,
-        App\Providers\Filament\OperatePanelProvider::class,
         App\Providers\Filament\AdminPanelProvider::class,
     ])->toArray(),
 

@@ -40,8 +40,7 @@ class Brand extends Model implements HasMedia
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      *
-     * This is called from tenant-context PanelProviders (see OperatePanelProvider.php)
-     * to apply the brand configuration to the panel.
+     * This is called from tenant-context PanelProviders to apply the brand configuration to the panel.
      */
     public function applyToPanel(string $panelName, Tenant $tenant): void
     {

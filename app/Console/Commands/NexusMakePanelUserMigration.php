@@ -19,7 +19,7 @@ class NexusMakePanelUserMigration extends Command
 
         $tenantPath = $this->option('tenant') ? 'tenant'.DIRECTORY_SEPARATOR : '';
 
-        $targetPath = $migrationsPath.DIRECTORY_SEPARATOR.$tenantPath.date('Y_m_d_His')."_create_{$model}_table.php";
+        $targetPath = $migrationsPath.DIRECTORY_SEPARATOR.$tenantPath."2014_10_11_100000_create_{$model}_table.php";
 
         $files = File::files($migrationsPath);
 
