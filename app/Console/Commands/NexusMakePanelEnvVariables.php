@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Services\Nexus;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
@@ -68,6 +69,11 @@ class NexusMakePanelEnvVariables extends Command
                 fwrite($fp, "{$model_upper}_PANEL_USER_NAME=\"$model\"\n");
                 fwrite($fp, "{$model_upper}_PANEL_EMAIL_ADDRESS=\"$model_lower@localhost.com\"\n");
                 fwrite($fp, "{$model_upper}_PANEL_USER_PASSWORD=\"password\"\n");
+
+                Config::set("nexus.$model_lower.user.name", $model);
+                Config::set("nexus.$model_lower.user.email", "$model_lower@localhost.com");
+                Config::set("nexus.$model_lower.user.password", 'password');
+
                 // Stop the flag so we don't repeat this for every line.
                 $ready = false;
             }
