@@ -48,7 +48,7 @@ class NexusMakePanelUserModel extends Command
             'use OwenIt\Auditing\Auditable;',
             'use Rappasoft\LaravelAuthenticationLog\Traits\AuthenticationLoggable;',
             'use Spatie\Permission\Traits\HasRoles;',
-            "use App\Providers\Filament\{$model}PanelProvider;",
+            "use App\Providers\Filament\\{$model}PanelProvider;",
         ];
 
         foreach ($model_imports as $import) {
