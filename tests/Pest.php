@@ -12,8 +12,12 @@
 */
 
 uses(
+    Tests\TenantAwareTestCase::class,
+)->in('Tenant');
+
+uses(
     Tests\TestCase::class,
-    // Illuminate\Foundation\Testing\RefreshDatabase::class,
+//     Illuminate\Foundation\Testing\RefreshDatabase::class,
 )->in('Feature');
 
 /*
