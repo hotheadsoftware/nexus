@@ -6,7 +6,6 @@ use App\Models\Tenant;
 use Auth;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use Illuminate\Support\Carbon;
 
 class StatsOverview extends BaseWidget
 {
@@ -29,10 +28,6 @@ class StatsOverview extends BaseWidget
         $stats[] = Stat::make('Domains', $tenants->sum(fn ($tenant) => $tenant->domains->count()))
             ->description('Enabled Domains')
             ->descriptionColor('primary');
-
-        $stats[] = Stat::make('Next Invoice', '$2500')
-            ->description(Carbon::now()->addMonth()->format('M d, Y'))
-            ->descriptionColor('danger');
 
         return $stats;
     }
