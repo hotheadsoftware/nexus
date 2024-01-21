@@ -4,7 +4,7 @@ use App\Services\Domains;
 
 beforeEach(function () {
     $this->domains = new Domains();
-    $this->domain = 'example.com';
+    $this->domain  = 'example.com';
 });
 
 it('can add a domain to the dns provider', function () {

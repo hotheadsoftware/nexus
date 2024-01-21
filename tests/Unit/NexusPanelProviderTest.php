@@ -8,17 +8,15 @@
  * If this test sequence fails, it means that the stub file has been updated and
  * we need to update our replacement logic in app/Console/Commands/NexusMakePanel.php
  */
-
-$stubFilePath = 'vendor/filament/support/stubs/PanelProvider.stub';
+$stubFilePath    = 'vendor/filament/support/stubs/PanelProvider.stub';
 $stubFileContent = file_get_contents($stubFilePath);
-
 
 it('has a filament panel provider stub file', function () use ($stubFilePath) {
 
     $this->assertTrue(file_exists($stubFilePath));
 });
 
-it('has the necessary strings in place for us to find & replace', function() use ($stubFileContent) {
+it('has the necessary strings in place for us to find & replace', function () use ($stubFileContent) {
     $find = [
         'App\\\\Filament\\\\{{ directory }}\\\\Resources',
         'App\\\\Filament\\\\{{ directory }}\\\\Pages',
@@ -31,7 +29,7 @@ it('has the necessary strings in place for us to find & replace', function() use
     }
 });
 
-it("looks like a default panel provider stub (not already nexus-replaced)", function() use ($stubFileContent) {
+it('looks like a default panel provider stub (not already nexus-replaced)', function () use ($stubFileContent) {
     $find = [
         '# Custom Branding Goes Here',
         'PreventAccessFromCentralDomains::class',
