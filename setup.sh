@@ -106,16 +106,29 @@ echo -e "\n${YELLOW}Installing NPM packages...${NC}"
 if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
     echo -e "\n${YELLOW}Setting up Pint on a pre-commit hook...${NC}"
 
-
-    cat > .git/hooks/pre-commit <<EOF
+cat > .git/hooks/pre-commit <<EOF
 #!/bin/sh
 
-files=$(git diff --cached --name-only --diff-filter=ACM -- '*.php');
+# Get list of staged PHP files
+files=\$(git diff --cached --name-only --diff-filter=ACM -- '*.php')
 
-./vendor/bin/sail exec -T laravel.test ./vendor/bin/pint $files -q
+if [ -z "\$files" ]; then
+    exit 0  # No PHP files to check, exit the script
+fi
 
-git add $files
+# Run Pint on the staged PHP files
+./vendor/bin/sail exec -T laravel.test ./vendor/bin/pint \$files -q
+
+# Check if there are any changes after running Pint
+if git diff --name-only --exit-code \$files; then
+    # No changes were made by Pint
+    exit 0
+else
+    # Add the changed files
+    git add \$files
+fi
 EOF
+
 
     chmod +x .git/hooks/pre-commit || error_exit "Error setting pre-commit hook as executable."
 else
