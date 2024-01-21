@@ -110,11 +110,11 @@ if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
     cat > .git/hooks/pre-commit <<EOF
 #!/bin/sh
 
-# Run Pint to fix code style issues
-./vendor/bin/sail exec -T ./vendor/bin/pint
+files=$(git diff --cached --name-only --diff-filter=ACM -- '*.php');
 
-# Continue with the commit if no changes were made
-exit 0
+./vendor/bin/sail exec -T laravel.test ./vendor/bin/pint $files -q
+
+git add $files
 EOF
 
     chmod +x .git/hooks/pre-commit || error_exit "Error setting pre-commit hook as executable."
