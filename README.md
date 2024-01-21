@@ -1,12 +1,6 @@
 # Nexus: Saas Launchpad
 
-<<<<<<< Updated upstream
 ![image](https://github.com/hotheadsoftware/nexus/assets/14931610/43558c0b-8e72-4595-b7dd-cd45b48a2cbf)
-
-
-=======
-![img_4.png](img_4.png)
->>>>>>> Stashed changes
 
 ## Documentation
 
