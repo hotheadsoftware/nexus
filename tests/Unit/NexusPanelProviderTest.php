@@ -13,7 +13,6 @@
  * need to update the stub file and the stub manipulation logic found in our
  * NexusMakePanelProviderStub.php file.
  */
-
 $stubFilePath    = 'vendor/filament/support/stubs/PanelProvider.stub';
 $stubFileContent = file_get_contents($stubFilePath);
 
