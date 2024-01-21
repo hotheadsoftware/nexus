@@ -20,6 +20,16 @@ Summary: Laravel 10 + Filament v3 + Stancl/Tenancy
 If you'd like to see the rationale behind these choices, please see the Architectural Decision 
 Records in the `adr` folder.
 
+## Docs & Architecture
+
+Documentation: [https://hotheadsoftware.github.io/nexus-docs/](https://hotheadsoftware.github.io/nexus-docs/)
+
+Documentation Repo: [https://github.com/hotheadsoftware/nexus-docs](https://github.com/hotheadsoftware/nexus-docs)
+
+If you find something that needs to be corrected in our docs, please feel free to submit PRs!
+
+![img_5.png](img_5.png)
+
 ### Phase One: MVP (Monorepo & Monolith)
 
 Nexus is a monolithic application with both front and back end services. It delivers the
@@ -39,9 +49,9 @@ tickets/chat, tenant migration to new hardware, backup/restore on a per-tenant b
 features needed to operate as a service provider. This should also include revenue reporting
 and forecasting and some level of application analytics around usage of the platform. 
 
-## Feature List
 
-![img_5.png](img_5.png)
+
+## Feature List
 
 - [x] [Domain-Based Multi-Database Multi-Tenancy](https://tenancyforlaravel.com/docs/v3/)
 - [x] Multi-Tier User Support (Admin, Manager, Buyer, Supplier, etc)
