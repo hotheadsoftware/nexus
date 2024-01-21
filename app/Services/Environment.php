@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
  * @method isStaging() bool
  * @method isTesting() bool
  * @method isDevelopment() bool
+ * @method isCentral() bool
+ * @method isTenant() bool
  */
 class Environment
 {
