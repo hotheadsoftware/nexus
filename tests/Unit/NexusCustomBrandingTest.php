@@ -11,7 +11,7 @@
 
 use App\Services\Colors;
 
-test('that filament colors are compatible with custom branding', function () {
+it('has colors that are compatible with custom branding', function () {
 
     $colors = new Colors();
 
