@@ -57,7 +57,7 @@ and forecasting and some level of application analytics around usage of the plat
 - [x] [Model Tagging](https://spatie.be/docs/laravel-tags/v4/introduction)
 - [x] [User Roles & Permissions](https://spatie.be/docs/laravel-permission/v6/introduction)
 - [x] Panel-Scoped Tenant-Aware REST API Routes
-- [ ] Custom Artisan Helper Commands
+- [x] Custom Artisan Helper Commands
 - [ ] Stretch Goal -- IAC (Infrastructure as Code) with Terraform
 - [ ] Stretch Goal -- CI/CD with GitHub Actions
 
