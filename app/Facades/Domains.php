@@ -8,9 +8,9 @@ class Domains extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-
         // Testing pint hook
 
-                              return 'nexus.domains';
+        return 'nexus.domains';
+
     }
 }
