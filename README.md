@@ -2,18 +2,12 @@
 
 ![image](https://github.com/hotheadsoftware/nexus/assets/14931610/43558c0b-8e72-4595-b7dd-cd45b48a2cbf)
 
-## Documentation
-
-Documentation is available at [https://hotheadsoftware.github.io/nexus-docs/](https://hotheadsoftware.github.io/nexus-docs/)
-
-This will help you stand up a local environment and get started build your next Saas App!
-
 ## Description
 
 This is a Laravel 10+ project that incorporates numerous components with the aim of providing 
 a scaffold for micro-Saas applications.
 
-## Docs
+## Documentation
 
 Documentation: [https://hotheadsoftware.github.io/nexus-docs/](https://hotheadsoftware.github.io/nexus-docs/)
 
@@ -141,5 +135,6 @@ manually.)
 
 ## Contributing
 
-All contributions are welcome! Please see the [Contributing Guide](CONTRIBUTING.md) for more details.
+All contributions are welcome! Please see the [Contributing Guide](CONTRIBUTING.md) for 
+more details.
 
