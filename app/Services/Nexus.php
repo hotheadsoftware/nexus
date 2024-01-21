@@ -21,7 +21,7 @@ class Nexus
 
     private ?Filesystem $filesystem;
 
-    public function __construct(Filesystem $filesystem = null)
+    public function __construct(?Filesystem $filesystem = null)
     {
         // If no filesystem is provided, use the Laravel Filesystem
         $this->filesystem = $filesystem ?? new Filesystem();

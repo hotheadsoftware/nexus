@@ -1,8 +1,6 @@
 <?php
 
 use App\Services\Nexus;
-
-
 use Illuminate\Console\Command;
 
 it('collects panel configuration inputs', function () {
@@ -33,10 +31,9 @@ it('collects panel configuration inputs', function () {
         ->andReturn(false);
     $command->shouldReceive('option')
         ->with('copy_branding_from')
-        ->andReturn('')
-    ;
+        ->andReturn('');
 
-    $nexus = new Nexus();
+    $nexus  = new Nexus();
     $config = $nexus->getPanelConfigurationInputs($command);
 
     expect($config->get('name'))->toEqual('TestPanel');
@@ -60,11 +57,11 @@ it('correctly lists panel names', function () {
     $filesystem = Mockery::mock(Filesystem::class);
     $filesystem->shouldReceive('isDirectory')->andReturn(true);
     $filesystem->shouldReceive('files')->andReturn([
-        new SplFileInfo($root->url() . '/UserProvider.php'),
-        new SplFileInfo($root->url() . '/AdminProvider.php'),
+        new SplFileInfo($root->url().'/UserProvider.php'),
+        new SplFileInfo($root->url().'/AdminProvider.php'),
     ]);
 
-    $nexus = new Nexus($filesystem);
+    $nexus      = new Nexus($filesystem);
     $panelNames = $nexus->panelNames();
 
     expect($panelNames)->toContain('user', 'admin');

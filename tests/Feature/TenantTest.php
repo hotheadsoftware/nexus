@@ -5,15 +5,15 @@ use Illuminate\Support\Facades\DB;
 
 test('can create a tenant', function () {
     $driverName = DB::connection()->getDriverName();
-    $tenant = Tenant::factory()->create();
+    $tenant     = Tenant::factory()->create();
 
     if ($driverName === 'pgsql') {
-        $schemas = DB::select('SELECT datname FROM pg_database');
+        $schemas       = DB::select('SELECT datname FROM pg_database');
         $databaseNames = array_map(function ($db) {
             return $db->datname;
         }, $schemas);
     } else {
-        $schemas = DB::select('SHOW DATABASES');
+        $schemas       = DB::select('SHOW DATABASES');
         $databaseNames = array_map(function ($db) {
             return $db->Database;
         }, $schemas);
