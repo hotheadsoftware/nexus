@@ -13,20 +13,20 @@ This will help you stand up a local environment and get started build your next 
 This is a Laravel 10+ project that incorporates numerous components with the aim of providing 
 a scaffold for micro-Saas applications.
 
-## Architecture
-
-Summary: Laravel 10 + Filament v3 + Stancl/Tenancy
-
-If you'd like to see the rationale behind these choices, please see the Architectural Decision 
-Records in the `adr` folder.
-
-## Docs & Architecture
+## Docs
 
 Documentation: [https://hotheadsoftware.github.io/nexus-docs/](https://hotheadsoftware.github.io/nexus-docs/)
 
 Documentation Repo: [https://github.com/hotheadsoftware/nexus-docs](https://github.com/hotheadsoftware/nexus-docs)
 
 If you find something that needs to be corrected in our docs, please feel free to submit PRs!
+
+## Architecture
+
+Summary: Laravel 10 + Filament v3 + Stancl/Tenancy
+
+If you'd like to see the rationale behind these choices, please see the Architectural Decision 
+Records in the `adr` folder.
 
 ![img_5.png](img_5.png)
 
@@ -48,8 +48,6 @@ Build a Nexus-friendly control plane application. This will allow user impersona
 tickets/chat, tenant migration to new hardware, backup/restore on a per-tenant basis, and other 
 features needed to operate as a service provider. This should also include revenue reporting
 and forecasting and some level of application analytics around usage of the platform. 
-
-
 
 ## Feature List
 
