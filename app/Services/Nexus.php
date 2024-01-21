@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 
 use function Laravel\Prompts\select;
@@ -17,6 +18,14 @@ use function Laravel\Prompts\text;
 class Nexus
 {
     public static string $backupLocation = 'storage/app/nexus/backup/';
+
+    private ?Filesystem $filesystem;
+
+    public function __construct(?Filesystem $filesystem = null)
+    {
+        // If no filesystem is provided, use the Laravel Filesystem
+        $this->filesystem = $filesystem ?? new Filesystem();
+    }
 
     public function getPanelConfigurationInputs(Command $command): Collection
     {
@@ -101,22 +110,19 @@ class Nexus
      */
     public function panelNames(): Collection
     {
-        $directoryPath = app_path('Providers/Filament');
+        $directoryPath = base_path('app/Providers/Filament');
         $firstWords    = collect([]);
 
-        if (is_dir($directoryPath)) {
-            if ($dh = opendir($directoryPath)) {
-                while (($file = readdir($dh)) !== false) {
-                    if ($file != '.' && $file != '..' && pathinfo($file, PATHINFO_EXTENSION) == 'php') {
-                        $splitWords = preg_split('/(?=[A-Z])/', $file, -1, PREG_SPLIT_NO_EMPTY);
-                        if (count($splitWords) > 0) {
-                            // Convert the first word to lowercase and add to the list
-                            $firstWords->add(strtolower($splitWords[0]));
-                        }
+        if ($this->filesystem->isDirectory($directoryPath)) {
+            $files = $this->filesystem->files($directoryPath);
+            foreach ($files as $file) {
+                $filename = $file->getFilename();
+                if (pathinfo($filename, PATHINFO_EXTENSION) == 'php') {
+                    $splitWords = preg_split('/(?=[A-Z])/', $filename, -1, PREG_SPLIT_NO_EMPTY);
+                    if (count($splitWords) > 0) {
+                        $firstWords->add(strtolower($splitWords[0]));
                     }
                 }
-                closedir($dh);
-
             }
         }
 
