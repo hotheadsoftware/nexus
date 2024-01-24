@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Pulse\UserResolver;
 use App\Services\Colors;
 use App\Services\Domains;
 use App\Services\Environment;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Pulse\Users;
 use Laravel\Telescope\TelescopeServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -31,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
         $this->setFacades();
         $this->setModelOptions();
         $this->setSanctumGuard();
+        $this->app->bind(Users::class, UserResolver::class);
     }
 
     protected function registerNonProdServiceProviders(): void
