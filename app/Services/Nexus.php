@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\File;
 
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
@@ -127,5 +128,27 @@ class Nexus
         }
 
         return $firstWords;
+    }
+
+    public static function getBackupStorageDirectory(): string
+    {
+        return storage_path('app/nexus/backup/');
+    }
+
+    public static function backupFile(string $originalPath): void
+    {
+        $backupPath = self::getBackupStorageDirectory().$originalPath;
+        $backupDir  = dirname($backupPath);
+        File::isDirectory($backupDir) || File::makeDirectory($backupDir, 0755, true, true);
+
+        File::copy($originalPath, $backupPath);
+    }
+
+    public static function restoreFile(string $backupPath): void
+    {
+        if (File::exists($backupPath)) {
+            $originalPath = str_replace(self::getBackupStorageDirectory(), '', $backupPath);
+            File::copy($backupPath, $originalPath);
+        }
     }
 }

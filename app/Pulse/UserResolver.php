@@ -14,10 +14,10 @@ class UserResolver implements ResolvesUsers
 
     public function load(Collection $keys): self
     {
+        // index 0 is the class, index 1 is the id
         $keys = $keys->map(fn ($key) => explode(':', $key));
 
         $this->resolvedUsers = [
-
             Administrator::class => Administrator::findMany($keys
                 ->filter(fn ($key) => $key[0] === Administrator::class)->map(fn ($key) => $key[1])->values()),
 
@@ -25,42 +25,41 @@ class UserResolver implements ResolvesUsers
 
             User::class => User::findMany($keys
                 ->filter(fn ($key) => $key[0] === User::class)->map(fn ($key) => $key[1])->values()),
-
         ];
 
         return $this;
-
     }
 
+    /**
+     * We can use a match here by class type to return a slightly transformed object
+     * which tells us a little more about the user type.
+     */
     public function find(int|string|null $key): object
     {
-
         [$class, $id] = explode(':', $key);
 
-        $user = $this->resolvedUsers[$class]->first(
-            fn ($user) => $user->id == $id
-        );
+        $user = $this->resolvedUsers[$class]->first(fn ($user) => $user->id == $id);
 
         return $this->getProfile($user);
     }
 
-    /**
-     * All Nexus user types extend this User model. We use this to get the necessary
-     * panel detail.
-     */
     protected function getProfile(\Illuminate\Foundation\Auth\User $user): object
     {
-        return (object) [
-            'name'  => $user->name,
-            'extra' => $user->email,
-        ];
+        $authenticatableType = match (get_class($user)) {
+            Administrator::class => 'Administrator',
+            User::class          => 'User',
+            default              => 'Unknown',
+        };
 
+        return (object) [
+            'name'   => $user->name." ($authenticatableType)",
+            'extra'  => $user->email,
+            'avatar' => 'https://gravatar.com/avatar?d=mp',
+        ];
     }
 
     public function key(Authenticatable $user): int|string|null
     {
-
         return get_class($user).':'.$user->getAuthIdentifier();
-
     }
 }
