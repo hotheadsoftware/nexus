@@ -58,6 +58,8 @@ class NexusMakePanel extends Command
 
             $this->call('nexus:make-panel-user-model', $modelAndTenant);
 
+            $this->call('nexus:make-panel-user-pulse-resolver', $modelAndTenant);
+
             $this->call('nexus:make-panel-user-migration', $modelAndTenant);
 
             $this->call('nexus:make-auth-guard-and-provider', $modelAndTenant);
