@@ -67,7 +67,7 @@ class NexusMakePanelEnvVariables extends Command
                 fwrite($fp, "# guidance as to its purpose or permissions. It's up to you to decide that.\n");
                 fwrite($fp, "\n");
                 fwrite($fp, "{$model_upper}_PANEL_USER_NAME=\"$model\"\n");
-                fwrite($fp, "{$model_upper}_PANEL_EMAIL_ADDRESS=\"$model_lower@localhost.com\"\n");
+                fwrite($fp, "{$model_upper}_PANEL_USER_EMAIL=\"$model_lower@localhost.com\"\n");
                 fwrite($fp, "{$model_upper}_PANEL_USER_PASSWORD=\"password\"\n");
 
                 Config::set("nexus.$model_lower.user.name", $model);
