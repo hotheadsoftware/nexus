@@ -14,21 +14,41 @@ class BlockRemoteIPAddresses
         }
 
         /**
-         * List of routes which should always be allowed to reach any endpoint.
+         * Organized from lowest complexity to highest, we check against
+         * allowed routes, allowed IP addresses, and allowed CIDR blocks.
+         * All should be extremely fast with small arrays to check.
          */
         $allowedRoutes = config('app.allowed_routes', []);
-
-        /**
-         * List of IP addresses which should always be allowed to reach any endpoint.
-         */
-        $allowedIPAddresses = config('app.allowed_ips', []);
-
-        if (! in_array($request->ip(), $allowedIPAddresses)) {
-            if (! in_array($request->route()->getName(), array_values($allowedRoutes))) {
-                exit;
+        foreach ($allowedRoutes as $route) {
+            if ($request->route()->getName() == $route) {
+                return $next($request);
             }
         }
 
-        return $next($request);
+        $allowedIPAddresses = config('app.allowed_ips', []);
+        foreach ($allowedIPAddresses as $ip) {
+            if ($request->ip() === $ip) {
+                return $next($request);
+            }
+        }
+
+        $allowedCidrBlocks = config('app.allowed_cidr_blocks', []);
+        foreach ($allowedCidrBlocks as $cidrBlock) {
+            if ($this->ip_in_range($request->ip(), $cidrBlock)) {
+                return $next($request);
+            }
+        }
+
+        exit;
+    }
+
+    private function ip_in_range($ip, $cidr): bool
+    {
+        [$subnet, $mask] = explode('/', $cidr);
+        if ((ip2long($ip) & ~((1 << (32 - $mask)) - 1)) == ip2long($subnet)) {
+            return true;
+        }
+
+        return false;
     }
 }

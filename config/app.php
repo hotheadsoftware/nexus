@@ -55,9 +55,10 @@ return [
     |
     */
 
-    'block_remote_ips' => (bool) env('BLOCK_REMOTE_IPS', false),
-    'allowed_ips'      => explode(',', env('ALLOWED_IPS', '127.0.0.1,::1,172.19.0.1')),
-    'allowed_routes'   => explode(',', env('ALLOWED_ROUTES', '')),
+    'block_remote_ips'    => (bool) env('BLOCK_REMOTE_IPS', false),
+    'allowed_cidr_blocks' => explode(',', env('ALLOWED_CIDR_BLOCKS', '')),
+    'allowed_ips'         => explode(',', env('ALLOWED_IPS', '127.0.0.1,::1,172.19.0.1')),
+    'allowed_routes'      => explode(',', env('ALLOWED_ROUTES', '')),
 
     /*
     |--------------------------------------------------------------------------
