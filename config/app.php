@@ -59,7 +59,6 @@ return [
     'allowed_ips'      => explode(',', env('ALLOWED_IPS', '127.0.0.1,::1,172.19.0.1')),
     'allowed_routes'   => explode(',', env('ALLOWED_ROUTES', '')),
 
-
     /*
     |--------------------------------------------------------------------------
     | Application URL
