@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\Overrides\LoginNotFound;
 use App\Filament\Widgets\Account\CompanyList;
 use App\Filament\Widgets\Account\StatsOverview;
+use App\Http\Middleware\BlockRemoteIPAddresses;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -57,6 +58,7 @@ class AccountPanelProvider extends PanelProvider
                     ->enableSanctumTokens(permissions: ['create', 'read', 'update', 'delete']),
             ])
             ->middleware([
+                BlockRemoteIPAddresses::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
